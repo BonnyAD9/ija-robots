@@ -1,6 +1,6 @@
 package ija.robots.common;
 
-public class Circle {
+public final class Circle {
     private Vec2 pos;
     private float radius;
 

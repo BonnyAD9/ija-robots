@@ -1,6 +1,6 @@
 package ija.robots.common;
 
-public class Rect {
+public final class Rect {
     private Vec2 pos;
     private Vec2 size;
 
