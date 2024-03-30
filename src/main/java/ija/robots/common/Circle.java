@@ -52,4 +52,24 @@ public final class Circle {
     public boolean contains(Vec2 point) {
         return point.isInCircle(pos, radius);
     }
+
+    public Rect boundingBox() {
+        double diameter = radius * 2;
+        return new Rect(pos.sub(radius, radius), diameter, diameter);
+    }
+
+    public boolean overlaps(Rect rect) {
+        Rect bound = boundingBox();
+        return rect.overlaps(bound) && (
+            (rect.xRange().contains(x()) && rect.yRange().contains(y()))
+            || contains(rect.topLeft())
+            || contains(rect.topRight())
+            || contains(rect.botLeft())
+            || contains(rect.botRight())
+        );
+    }
+
+    public boolean overlaps(Circle other) {
+        return pos.sub(other.pos()).len() < radius + other.radius;
+    }
 }

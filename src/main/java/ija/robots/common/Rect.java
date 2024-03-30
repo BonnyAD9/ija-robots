@@ -80,4 +80,45 @@ public final class Rect {
     public boolean contains(Vec2 point) {
         return point.isInRectangle(pos, size);
     }
+
+    public boolean contains(Rect rect) {
+        return contains(rect.topLeft()) && contains(rect.botRight());
+    }
+
+    public boolean contains(Circle circle) {
+        return contains(circle.boundingBox());
+    }
+
+    public Vec2 xRange() {
+        return new Vec2(x(), x() + width());
+    }
+
+    public Vec2 yRange() {
+        return new Vec2(y(), y() + height());
+    }
+
+    public Vec2 topLeft() {
+        return pos;
+    }
+
+    public Vec2 topRight() {
+        return pos.add(width(), 0);
+    }
+
+    public Vec2 botLeft() {
+        return pos.add(0, height());
+    }
+
+    public Vec2 botRight() {
+        return pos.add(size);
+    }
+
+    public boolean overlaps(Rect rect) {
+        return xRange().overlaps(rect.xRange())
+            && yRange().overlaps(rect.yRange());
+    }
+
+    public boolean overlaps(Circle circle) {
+        return circle.overlaps(this);
+    }
 }

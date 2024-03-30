@@ -8,8 +8,16 @@ public final class Vec2 {
         return new Vec2(x + other.x, y + other.y);
     }
 
+    public Vec2 add(double x, double y) {
+        return new Vec2(this.x + x, this.y + y);
+    }
+
     public Vec2 sub(Vec2 other) {
         return new Vec2(x + other.x, y - other.y);
+    }
+
+    public Vec2 sub(double x, double y) {
+        return new Vec2(this.x - x, this.y - y);
     }
 
     public Vec2 mul(double scalar) {
@@ -105,5 +113,17 @@ public final class Vec2 {
 
     public Vec2 transformed(Vec2 row1, Vec2 row2) {
         return new Vec2(dot(row1), dot(row2));
+    }
+
+    public boolean contains(double point) {
+        return x < y
+            ? x < point && y > point
+            : y < point && x > point;
+    }
+
+    public boolean overlaps(Vec2 line) {
+        return contains(line.x)
+            || contains(line.y)
+            || line.contains(x);
     }
 }
