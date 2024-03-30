@@ -1,6 +1,6 @@
 package ija.robots.common;
 
-public final class Circle {
+public final class Circle implements IHitbox {
     private final Vec2 pos;
     private final double radius;
 
@@ -49,10 +49,12 @@ public final class Circle {
         return new Circle(pos.y(y), radius);
     }
 
+    @Override
     public boolean contains(Vec2 point) {
         return point.isInCircle(pos, radius);
     }
 
+    @Override
     public Rect boundingBox() {
         double diameter = radius * 2;
         return new Rect(pos.sub(radius, radius), diameter, diameter);
@@ -66,6 +68,7 @@ public final class Circle {
         return new Circle(pos.add(x, y), radius);
     }
 
+    @Override
     public boolean overlaps(Rect rect) {
         Rect bound = boundingBox();
         return rect.overlaps(bound) && (
@@ -77,6 +80,7 @@ public final class Circle {
         );
     }
 
+    @Override
     public boolean overlaps(Circle other) {
         return pos.sub(other.pos()).len() < radius + other.radius;
     }
