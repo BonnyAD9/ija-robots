@@ -58,6 +58,14 @@ public final class Circle {
         return new Rect(pos.sub(radius, radius), diameter, diameter);
     }
 
+    public Circle moveBy(Vec2 vec) {
+        return new Circle(pos.add(vec), radius);
+    }
+
+    public Circle moveBy(double x, double y) {
+        return new Circle(pos.add(x, y), radius);
+    }
+
     public boolean overlaps(Rect rect) {
         Rect bound = boundingBox();
         return rect.overlaps(bound) && (

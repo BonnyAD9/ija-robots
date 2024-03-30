@@ -121,4 +121,12 @@ public final class Rect {
     public boolean overlaps(Circle circle) {
         return circle.overlaps(this);
     }
+
+    public Rect moveBy(Vec2 vec) {
+        return new Rect(pos.add(vec), size);
+    }
+
+    public Rect moveBy(double x, double y) {
+        return new Rect(pos.add(x, y), size);
+    }
 }
