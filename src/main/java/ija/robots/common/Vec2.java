@@ -1,8 +1,8 @@
 package ija.robots.common;
 
 public final class Vec2 {
-    private float x;
-    private float y;
+    private final double x;
+    private final double y;
 
     public Vec2 add(Vec2 other) {
         return new Vec2(x + other.x, y + other.y);
@@ -12,83 +12,87 @@ public final class Vec2 {
         return new Vec2(x + other.x, y - other.y);
     }
 
-    public Vec2 mul(float scalar) {
+    public Vec2 mul(double scalar) {
         return new Vec2(x * scalar, y * scalar);
     }
 
-    public float dot(Vec2 other) {
+    public double dot(Vec2 other) {
         return x * other.x + y * other.y;
     }
 
-    public static Vec2 unit(float angle) {
-        return new Vec2((float)Math.cos(angle), (float)Math.sin(angle));
+    public static Vec2 unit(double angle) {
+        return new Vec2(Math.cos(angle), Math.sin(angle));
     }
 
-    public Vec2 rotated(float angle) {
-        float cos = (float)Math.cos(angle);
-        float sin = (float)Math.sin(angle);
+    public static Vec2 polar(double len, double angle) {
+        return unit(angle).mul(len);
+    }
+
+    public Vec2 rotated(double angle) {
+        double cos = Math.cos(angle);
+        double sin = Math.sin(angle);
         return transformed(new Vec2(cos, -sin), new Vec2(sin, cos));
     }
 
-    public float x() {
+    public double x() {
         return x;
     }
 
-    public float x(float x) {
-        return this.x = x;
+    public Vec2 x(double x) {
+        return new Vec2(x, y);
     }
 
-    public float y() {
+    public double y() {
         return y;
     }
 
-    public float y(float y) {
-        return this.y = y;
+    public Vec2 y(double y) {
+        return new Vec2(x, y);
     }
 
-    public float width() {
+    public double width() {
         return x;
     }
 
-    public float width(float width) {
-        return this.x = width;
+    public Vec2 width(double width) {
+        return new Vec2(width, height());
     }
 
-    public float height() {
+    public double height() {
         return this.y;
     }
 
-    public float height(float height) {
-        return this.y = height;
+    public Vec2 height(double height) {
+        return new Vec2(width(), height);
     }
 
-    public float len() {
-        return (float)Math.sqrt(sqLen());
+    public double len() {
+        return Math.sqrt(sqLen());
     }
 
-    public Vec2 withLen(float len) {
-        float mul = len / this.len();
+    public Vec2 len(double len) {
+        double mul = len / this.len();
         return new Vec2(x * mul, y * mul);
     }
 
-    public float sqLen() {
+    public double sqLen() {
         return x * x + y * y;
     }
 
-    public float angle() {
-        return (float)Math.atan2(y, x);
+    public double angle() {
+        return Math.atan2(y, x);
     }
 
-    public Vec2 withAngle(float angle) {
+    public Vec2 angle(double angle) {
         return Vec2.unit(angle).mul(len());
     }
 
-    public Vec2(float x, float y) {
+    public Vec2(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public boolean isInCircle(Vec2 center, float radius) {
+    public boolean isInCircle(Vec2 center, double radius) {
         return sub(center).sqLen() < radius * radius;
     }
 

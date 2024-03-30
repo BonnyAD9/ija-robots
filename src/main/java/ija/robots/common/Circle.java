@@ -1,15 +1,15 @@
 package ija.robots.common;
 
 public final class Circle {
-    private Vec2 pos;
-    private float radius;
+    private final Vec2 pos;
+    private final double radius;
 
-    public Circle(Vec2 pos, float radius) {
+    public Circle(Vec2 pos, double radius) {
         this.pos = pos;
         this.radius = radius;
     }
 
-    public Circle(float x, float y, float radius) {
+    public Circle(double x, double y, double radius) {
         this(new Vec2(x, y), radius);
     }
 
@@ -17,32 +17,36 @@ public final class Circle {
         return pos;
     }
 
-    public Vec2 pos(Vec2 pos) {
-        return this.pos = pos;
+    public Circle pos(Vec2 pos) {
+        return new Circle(pos, radius);
     }
 
-    public float radius() {
+    public Circle pos(double x, double y) {
+        return new Circle(x, y, radius);
+    }
+
+    public double radius() {
         return radius;
     }
 
-    public float radius(float radius) {
-        return this.radius = radius;
+    public Circle radius(double radius) {
+        return new Circle(pos, radius);
     }
 
-    public float x() {
+    public double x() {
         return pos.x();
     }
 
-    public float x(float x) {
-        return pos.x(x);
+    public Circle x(double x) {
+        return new Circle(pos.x(x), radius);
     }
 
-    public float y() {
+    public double y() {
         return pos.y();
     }
 
-    public float y(float y) {
-        return pos.y(y);
+    public Circle y(double y) {
+        return new Circle(pos.y(y), radius);
     }
 
     public boolean contains(Vec2 point) {
