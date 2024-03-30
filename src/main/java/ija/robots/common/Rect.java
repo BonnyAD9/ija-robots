@@ -5,6 +5,14 @@ public final class Rect implements IHitbox {
     private final Vec2 size;
 
     public Rect(Vec2 pos, Vec2 size) {
+        if (size.width() < 0) {
+            pos = pos.add(size.width(), 0);
+            size = size.width(-size.width());
+        }
+        if (size.height() < 0) {
+            pos = pos.add(0, size.height());
+            size = size.height(-size.height());
+        }
         this.pos = pos;
         this.size = size;
     }

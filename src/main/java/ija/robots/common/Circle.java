@@ -6,7 +6,7 @@ public final class Circle implements IHitbox {
 
     public Circle(Vec2 pos, double radius) {
         this.pos = pos;
-        this.radius = radius;
+        this.radius = Math.abs(radius);
     }
 
     public Circle(double x, double y, double radius) {
