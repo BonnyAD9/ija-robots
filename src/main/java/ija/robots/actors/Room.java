@@ -2,6 +2,7 @@ package ija.robots.actors;
 
 import java.util.ArrayList;
 
+import ija.robots.common.Circle;
 import ija.robots.common.IHitbox;
 import ija.robots.common.Rect;
 
@@ -35,8 +36,30 @@ public class Room {
     }
 
     public boolean colides(IHitbox hitbox) {
+        return colides(hitbox, null);
+    }
+
+    public boolean colides(IHitbox hitbox, Object except) {
         return !bounds.contains(hitbox)
-            || obstacles.stream().anyMatch(o -> hitbox.overlaps(o.hitbox()))
-            || robots.stream().anyMatch(r -> hitbox.overlaps(r.hitbox()));
+            || obstacles.stream().anyMatch(
+                o -> o != except && hitbox.overlaps(o.hitbox())
+            ) || robots.stream().anyMatch(
+                r -> r != except && hitbox.overlaps(r.hitbox())
+            );
+    }
+
+    public void tick(double delta) {
+        // TODO: smarter moving, check collisions after all move
+        for (Robot r : robots) {
+            moveRobot(r, delta);
+        }
+    }
+
+    private void moveRobot(Robot robot, double delta) {
+        // TODO: better moving, move where it is possible on collision
+        Circle newHitbox = robot.movedHitbox(delta);
+        if (!colides(newHitbox, robot)) {
+            robot.moveTo(newHitbox.pos());
+        }
     }
 }

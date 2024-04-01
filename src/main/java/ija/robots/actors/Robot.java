@@ -19,4 +19,24 @@ public class Robot {
     public Vec2 speed() {
         return speed;
     }
+
+    public Vec2 speed(Vec2 speed) {
+        return this.speed = speed;
+    }
+
+    public void moveTo(Vec2 pos) {
+        hitbox = hitbox.pos(pos);
+    }
+
+    public Circle movedHitbox(double delta) {
+        return hitbox.moveBy(speed.mul(delta));
+    }
+
+    public void lookAt(double angle) {
+        speed = speed.angle(angle);
+    }
+
+    public void rotate(double angle) {
+        speed = speed.rotated(angle);
+    }
 }
