@@ -6,6 +6,7 @@ import ija.robots.common.Vec2;
 public class Robot {
     private Circle hitbox;
     private Vec2 speed;
+    public int id;
 
     public Robot(Circle hitbox, Vec2 speed) {
         this.hitbox = hitbox;
@@ -38,5 +39,29 @@ public class Robot {
 
     public void rotate(double angle) {
         speed = speed.rotated(angle);
+    }
+
+    @Override
+    public String toString() {
+        String s = "Robot"
+            + id
+            + " { position: "
+            + hitbox.pos().toString()
+            + ", direction: ";
+
+
+        if (speed.y() > 0.5) {
+            s += "d";
+        } else if (speed.y() < -0.5) {
+            s += "u";
+        }
+
+        if (speed.x() > 0.5) {
+            s += "r";
+        } else if (speed.x() < -0.5) {
+            s += "l";
+        }
+
+        return s + " }";
     }
 }

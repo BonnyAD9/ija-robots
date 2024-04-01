@@ -8,8 +8,8 @@ import ija.robots.common.Rect;
 
 public class Room {
     private Rect bounds;
-    private ArrayList<Robot> robots;
-    private ArrayList<Obstacle> obstacles;
+    private ArrayList<Robot> robots = new ArrayList<>();
+    private ArrayList<Obstacle> obstacles = new ArrayList<>();
 
     public Room(Rect bounds) {
         this.bounds = bounds;
@@ -41,11 +41,37 @@ public class Room {
 
     public boolean colides(IHitbox hitbox, Object except) {
         return !bounds.contains(hitbox)
-            || obstacles.stream().anyMatch(
-                o -> o != except && hitbox.overlaps(o.hitbox())
-            ) || robots.stream().anyMatch(
-                r -> r != except && hitbox.overlaps(r.hitbox())
-            );
+            || colidesObstacle(hitbox, except)
+            || colidesRobot(hitbox, except);
+    }
+
+    public boolean colidesObstacle(IHitbox hitbox) {
+        return colidesObstacle(hitbox, null);
+    }
+
+    public boolean colidesObstacle(IHitbox hitbox, Object except) {
+        return obstacles.stream().anyMatch(
+            o -> o != except && hitbox.overlaps(o.hitbox())
+        );
+    }
+
+    public boolean colidesRobot(IHitbox hitbox) {
+        return colidesRobot(hitbox, null);
+    }
+
+    public Robot getColidingRobot(IHitbox hitbox) {
+        for (Robot r : robots) {
+            if (hitbox.overlaps(r.hitbox())) {
+                return r;
+            }
+        }
+        return null;
+    }
+
+    public boolean colidesRobot(IHitbox hitbox, Object except) {
+        return robots.stream().anyMatch(
+            r -> r != except && hitbox.overlaps(r.hitbox())
+        );
     }
 
     public void tick(double delta) {
@@ -61,5 +87,38 @@ public class Room {
         if (!colides(newHitbox, robot)) {
             robot.moveTo(newHitbox.pos());
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        int width = (int)bounds.width();
+        sb.append("##");
+        for (int i = 0; i < width; ++i) {
+            sb.append("##");
+        }
+        sb.append("##\n");
+
+        String line = sb.toString();
+
+        int height = (int)bounds.height();
+        for (int y = 0; y < height; ++y) {
+            sb.append("##");
+            for (int x = 0; x < width; ++x) {
+                Rect box = new Rect(bounds.pos().add(x + 0.25, y + 0.25), 0.5, 0.5);
+                if (colidesObstacle(box)) {
+                    sb.append("OO");
+                } else if (getColidingRobot(box) instanceof Robot r) {
+                    sb.append("R" + r.id);
+                } else {
+                    sb.append("  ");
+                }
+            }
+            sb.append("##\n");
+        }
+
+        sb.append(line);
+
+        return sb.toString();
     }
 }
