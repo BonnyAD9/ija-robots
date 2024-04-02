@@ -1,6 +1,8 @@
 \documentclass{article}
 \usepackage{graphicx} % Required for inserting images
 \usepackage[czech]{babel}
+\usepackage[table]{xcolor}
+\usepackage{array}
 
 \title{IJA Robots - Requirements}
 \author{
@@ -18,6 +20,55 @@
 \newpage
 
 \section{Requirements}
-TODO
+\begin{tabular}{r l}
+    \textbf{Priority:} & Nejvyšší priorita = 5 \\
+        & Nejnižší priorita = 1 \\ \\
+    \textbf{Poznámka:} &
+        \cellcolor{green!30}Zeleně podbarvené jsou vyřešené požadavky
+            (odevzdané v 2. úkolu)
+\end{tabular}
+
+\vspace{\baselineskip}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ |c|>{\raggedright\arraybackslash}p{3.5cm}|c|c| }
+        \hline
+        \rowcolor{blue!25}Priorita & Požadavky & Vlastník (má na starosti) &
+            Předpokládány termín \\
+        \hline
+        \rowcolor{green!25}3 & Základní model prostředí a překážek &
+            J. A. Štigler & 27.03.2024 \\
+        \hline
+        \rowcolor{green!25}3 & Základní model robota & J. A. Štigler &
+            27.03.2024 \\
+        \hline
+        \rowcolor{green!25}3 & Možnost vložení robotů a překážek do místnosti &
+            J. A. Štigler & 28.03.2024 \\
+        \hline
+        \rowcolor{green!25}1 & Třídy pro vizuální objekty - circle, rect &
+            J. A. Štigler & 01.04.2024 \\
+        \hline
+        \rowcolor{green!25}4 & Pohyb robotů a checkování hitboxů &
+            J. A. Štigler & 01.04.2024 \\
+        \hline
+        \rowcolor{green!25}5 & Výpis místnosti do konzole & J. A. Štigler &
+            03.04.2024 \\
+        \hline
+        2 & Vylepšení detekce naražení & J. A. Štigler & 06.04.2024 \\
+        \hline
+        5 & Grafické rozhraní zobrazující místnost & J. A. Štigler &
+            14.04.2024 \\
+        \hline
+        5 & Implementace autonomního robota & J. A. Štigler & 20.04.2024 \\
+        \hline
+        5 & Implementace ovládaného robota & J. A. Štigler & 24.04.2024 \\
+        \hline
+        3 & Načítání místnosti ze souboru & J. A. Štigler & 27.04.2024 \\
+        \hline
+        3 & Možnost úpravy a ukládání místnosti & J. A. Štigler & 28.04.2024 \\
+        \hline
+    \end{tabular}
+\end{table}
 
 \end{document}
