@@ -1,6 +1,7 @@
 package ija.robots.actors;
 
 import ija.robots.common.Rect;
+import javafx.scene.shape.Rectangle;
 
 public class Obstacle {
     private Rect hitbox;
@@ -11,5 +12,9 @@ public class Obstacle {
 
     public Rect hitbox() {
         return hitbox;
+    }
+
+    public Rectangle getGraphics() {
+        return hitbox.getGraphics();
     }
 }

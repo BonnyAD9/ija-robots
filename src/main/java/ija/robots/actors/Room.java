@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import ija.robots.common.Circle;
 import ija.robots.common.IHitbox;
 import ija.robots.common.Rect;
+import javafx.scene.layout.Pane;
 
 public class Room {
     private Rect bounds;
@@ -120,5 +121,16 @@ public class Room {
         sb.append(line);
 
         return sb.toString();
+    }
+
+    public Pane getGraphics() {
+        Pane room = new Pane();
+        for (Obstacle obstacle : obstacles) {
+            room.getChildren().add(obstacle.getGraphics());
+        }
+        for (Robot robot : robots) {
+            room.getChildren().add(robot.getGraphics());
+        }
+        return room;
     }
 }

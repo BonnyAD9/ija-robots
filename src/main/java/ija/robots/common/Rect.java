@@ -1,5 +1,8 @@
 package ija.robots.common;
 
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
 public final class Rect implements IHitbox {
     private final Vec2 pos;
     private final Vec2 size;
@@ -148,5 +151,13 @@ public final class Rect implements IHitbox {
 
     public boolean contains(IHitbox hitbox) {
         return contains(hitbox.boundingBox());
+    }
+
+    public Rectangle getGraphics() {
+        Rectangle rect = new Rectangle(x(), y(), width(), height());
+        rect.setFill(Color.web("#FF5555"));
+        rect.setStroke(Color.WHITE);
+        rect.setStrokeWidth(6);
+        return rect;
     }
 }

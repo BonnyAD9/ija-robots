@@ -9,13 +9,23 @@ import ija.robots.actors.Room;
 import ija.robots.common.Circle;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 /**
  * Hello world!
  *
  */
-public class App {
+public class App extends Application {
     public static void main(String[] args) {
+        launch(args);
+
         //    -6-5-4-3-2-10 1 2 3 4 5
         // -6 ########################
         // -5 ##                RR  ##
@@ -30,6 +40,7 @@ public class App {
         //  4 ##                    ##
         //  5 ########################
 
+        /*
         Room room = new Room(new Rect(-5, -5, 10, 10));
         System.out.println(room.add(new Obstacle(new Rect(-2, -3, 4, 1))));
         System.out.println(room.add(new Obstacle(new Rect(1, -2, 1, 4))));
@@ -60,12 +71,34 @@ public class App {
             if (sc.nextLine().trim().equals("q")) {
                 break;
             }
-            
+
             System.out.println();
 
             room.tick(1);
         }
 
         sc.close();
+        */
+    }
+
+    public void start(Stage stage) {
+        Platform.runLater(() -> {
+            Room room = new Room(new Rect(0, 0, 800, 600));
+            room.add(new Obstacle(new Rect(100, 200, 60, 60)));
+            room.add(new Robot(new Circle(200, 100, 25), Vec2.unit(0)));
+
+            // Robot[] robots = {
+            //     new Robot(new Circle(3.5, -4.5, 0.4), Vec2.unit(0)),
+            //     new Robot(new Circle(-2.5, 0.5, 0.4), Vec2.unit(0)),
+            //     new Robot(new Circle(0.5, 3.5, 0.4), Vec2.unit(0)),
+            // };
+
+            Scene scene = new Scene(room.getGraphics(), 800, 600);
+            scene.setFill(Color.web("#222222"));
+
+            stage.setScene(scene);
+            stage.setTitle("IJA robots");
+            stage.show();
+        });
     }
 }

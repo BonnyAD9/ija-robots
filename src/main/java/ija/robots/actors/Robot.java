@@ -64,4 +64,8 @@ public class Robot {
 
         return s + " }";
     }
+
+    public javafx.scene.shape.Circle getGraphics() {
+        return hitbox.getGraphics();
+    }
 }

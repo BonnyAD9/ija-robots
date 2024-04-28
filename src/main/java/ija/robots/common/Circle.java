@@ -1,5 +1,7 @@
 package ija.robots.common;
 
+import javafx.scene.paint.Color;
+
 public final class Circle implements IHitbox {
     private final Vec2 pos;
     private final double radius;
@@ -83,5 +85,14 @@ public final class Circle implements IHitbox {
     @Override
     public boolean overlaps(Circle other) {
         return pos.sub(other.pos()).len() < radius + other.radius;
+    }
+
+    public javafx.scene.shape.Circle getGraphics() {
+        javafx.scene.shape.Circle circle =
+            new javafx.scene.shape.Circle(x(), y(), radius());
+        circle.setFill(Color.web("#55cc55"));
+        circle.setStroke(Color.WHITE);
+        circle.setStrokeWidth(6);
+        return circle;
     }
 }
