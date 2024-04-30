@@ -2,12 +2,14 @@ package ija.robots.actors;
 
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class Robot {
     private static final double RADIUS = 30;
     private Circle shape;
+    private Vec2 lastPos = new Vec2(0, 0);
 
     double speed;
     double angle;
@@ -17,14 +19,15 @@ public class Robot {
         shape.setFill(Color.web("#cc55cc"));
         shape.setStroke(Color.WHITE);
         shape.setStrokeWidth(6);
+        shape.setOnMousePressed(e -> mousePress(e));
+        shape.setOnMouseDragged(e -> mouseDrag(e));
         this.speed = speed;
         this.angle = angle;
     }
 
     public Rect hitbox() {
         return new Rect(
-            shape.getCenterX() - RADIUS,
-            shape.getCenterY() - RADIUS,
+            pos(),
             RADIUS * 2,
             RADIUS * 2
         );
@@ -43,9 +46,13 @@ public class Robot {
         return this.speed = speed;
     }
 
+    private void moveBy(Vec2 vec) {
+        moveTo(pos().add(vec));
+    }
+
     public void moveTo(Vec2 pos) {
-        shape.setCenterX(pos.x() - RADIUS);
-        shape.setCenterY(pos.y() - RADIUS);
+        shape.setCenterX(pos.x() + RADIUS);
+        shape.setCenterY(pos.y() + RADIUS);
     }
 
     public void angle(double angle) {
@@ -54,5 +61,23 @@ public class Robot {
 
     public Circle getShape() {
         return shape;
+    }
+
+    public Vec2 pos() {
+        return new Vec2(
+            shape.getCenterX() - RADIUS,
+            shape.getCenterY() - RADIUS
+        );
+    }
+
+    private void mousePress(MouseEvent event) {
+        lastPos = new Vec2(event.getX(), event.getY());
+    }
+
+    private void mouseDrag(MouseEvent event) {
+        var newPos = new Vec2(event.getX(), event.getY());
+        var delta = newPos.sub(lastPos);
+        moveBy(delta);
+        lastPos = newPos;
     }
 }
