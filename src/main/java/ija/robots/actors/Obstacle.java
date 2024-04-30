@@ -10,8 +10,18 @@ public class Obstacle {
     private static final double BORDER_THICKNESS = 6;
     private static final double ADJ = BORDER_THICKNESS / 2;
 
+    private class State {
+        static final int NONE = 0x0;
+        static final int DRAGGING = 0x1;
+        static final int RESIZE_HORIZONTAL = 0x02;
+        static final int RESIZE_VERTICAL = 0x04;
+        static final int RESIZE_LEFT = 0x8;
+        static final int RESIZE_TOP = 0x10;
+    }
+
     private Rectangle shape;
     private Vec2 lastPos = new Vec2(0, 0);
+    private int state = State.NONE;
 
     public Obstacle(Rect rect) {
         shape = new Rectangle(rect.x(), rect.y(), rect.width(), rect.height());
@@ -60,12 +70,71 @@ public class Obstacle {
 
     private void mousePress(MouseEvent event) {
         lastPos = new Vec2(event.getX(), event.getY());
+        var relPos = lastPos.sub(apos());
+
+        state = State.NONE;
+
+        if (relPos.x() < ADJ) {
+            state |= State.RESIZE_HORIZONTAL | State.RESIZE_LEFT;
+        } else if (shape.getWidth() - relPos.x() <= ADJ) {
+            state |= State.RESIZE_HORIZONTAL;
+        }
+
+        if (relPos.y() < ADJ) {
+            state |= State.RESIZE_VERTICAL | State.RESIZE_TOP;
+        } else if (shape.getHeight() - relPos.y() <= ADJ) {
+            state |= State.RESIZE_VERTICAL;
+        }
+
+        if (state == State.NONE) {
+            state = State.DRAGGING;
+        }
     }
 
     private void mouseDrag(MouseEvent event) {
         var newPos = new Vec2(event.getX(), event.getY());
         var delta = newPos.sub(lastPos);
-        moveBy(delta);
         lastPos = newPos;
+
+        if (state == State.DRAGGING) {
+            moveBy(delta);
+            return;
+        }
+
+        if (hasState(State.RESIZE_HORIZONTAL)) {
+            var w = shape.getWidth();
+            if (hasState(State.RESIZE_LEFT)) {
+                shape.setX(shape.getX() + delta.x());
+                w -= delta.x();
+            } else {
+                w += delta.x();
+            }
+            if (w < 0) {
+                shape.setX(shape.getX() + w);
+                w = -w;
+                state ^= State.RESIZE_LEFT;
+            }
+            shape.setWidth(w);
+        }
+
+        if (hasState(State.RESIZE_VERTICAL)) {
+            var h = shape.getHeight();
+            if (hasState(State.RESIZE_TOP)) {
+                shape.setY(shape.getY() + delta.y());
+                h -= delta.y();
+            } else {
+                h += delta.y();
+            }
+            if (h < 0) {
+                shape.setY(shape.getY() + h);
+                h = -h;
+                state ^= State.RESIZE_TOP;
+            }
+            shape.setHeight(h);
+        }
+    }
+
+    private boolean hasState(int flag) {
+        return (state & flag) == flag;
     }
 }
