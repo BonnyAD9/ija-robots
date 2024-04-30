@@ -1,6 +1,6 @@
 package ija.robots.common;
 
-public final class Rect implements IHitbox {
+public final class Rect {
     private final Vec2 pos;
     private final Vec2 size;
 
@@ -85,7 +85,6 @@ public final class Rect implements IHitbox {
         return new Rect(pos, size.height(height));
     }
 
-    @Override
     public boolean contains(Vec2 point) {
         return point.isInRectangle(pos, size);
     }
@@ -122,13 +121,11 @@ public final class Rect implements IHitbox {
         return pos.add(size);
     }
 
-    @Override
     public boolean overlaps(Rect rect) {
         return xRange().overlaps(rect.xRange())
             && yRange().overlaps(rect.yRange());
     }
 
-    @Override
     public boolean overlaps(Circle circle) {
         return circle.overlaps(this);
     }
@@ -141,12 +138,12 @@ public final class Rect implements IHitbox {
         return new Rect(pos.add(x, y), size);
     }
 
-    @Override
     public Rect boundingBox() {
         return this;
     }
 
-    public boolean contains(IHitbox hitbox) {
-        return contains(hitbox.boundingBox());
+    @Override
+    public String toString() {
+        return "Rect{" + pos + ", " + size + "}";
     }
 }

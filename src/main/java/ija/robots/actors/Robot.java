@@ -1,67 +1,58 @@
 package ija.robots.actors;
 
-import ija.robots.common.Circle;
+import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class Robot {
-    private Circle hitbox;
-    private Vec2 speed;
-    public int id;
+    private static final double RADIUS = 30;
+    private Circle shape;
 
-    public Robot(Circle hitbox, Vec2 speed) {
-        this.hitbox = hitbox;
+    double speed;
+    double angle;
+
+    public Robot(Vec2 topLeft, double speed, double angle) {
+        shape = new Circle(topLeft.x() + RADIUS, topLeft.y() + RADIUS, RADIUS);
+        shape.setFill(Color.web("#cc55cc"));
+        shape.setStroke(Color.WHITE);
+        shape.setStrokeWidth(6);
         this.speed = speed;
+        this.angle = angle;
     }
 
-    public Circle hitbox() {
-        return hitbox;
+    public Rect hitbox() {
+        return new Rect(
+            shape.getCenterX() - RADIUS,
+            shape.getCenterY() - RADIUS,
+            RADIUS * 2,
+            RADIUS * 2
+        );
     }
 
-    public Vec2 speed() {
+    public Rect hitbox(Rect rect) {
+        moveTo(rect.topLeft());
+        return rect;
+    }
+
+    public double speed() {
         return speed;
     }
 
-    public Vec2 speed(Vec2 speed) {
+    public double speed(double speed) {
         return this.speed = speed;
     }
 
     public void moveTo(Vec2 pos) {
-        hitbox = hitbox.pos(pos);
+        shape.setCenterX(pos.x() - RADIUS);
+        shape.setCenterY(pos.y() - RADIUS);
     }
 
-    public Circle movedHitbox(double delta) {
-        return hitbox.moveBy(speed.mul(delta));
+    public void angle(double angle) {
+        this.angle = angle;
     }
 
-    public void lookAt(double angle) {
-        speed = speed.angle(angle);
-    }
-
-    public void rotate(double angle) {
-        speed = speed.rotated(angle);
-    }
-
-    @Override
-    public String toString() {
-        String s = "Robot"
-            + id
-            + " { position: "
-            + hitbox.pos().toString()
-            + ", direction: ";
-
-
-        if (speed.y() > 0.5) {
-            s += "d";
-        } else if (speed.y() < -0.5) {
-            s += "u";
-        }
-
-        if (speed.x() > 0.5) {
-            s += "r";
-        } else if (speed.x() < -0.5) {
-            s += "l";
-        }
-
-        return s + " }";
+    public Circle getShape() {
+        return shape;
     }
 }
