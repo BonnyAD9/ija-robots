@@ -26,6 +26,8 @@ public class App extends Application {
             room.add(new Obstacle(new Rect(100, 200, 60, 60)));
             room.add(new Robot(new Vec2(200, 100), 20, 0));
 
+            stage.setOnCloseRequest(e -> room.run(false));
+
             // Robot[] robots = {
             //     new Robot(new Circle(3.5, -4.5, 0.4), Vec2.unit(0)),
             //     new Robot(new Circle(-2.5, 0.5, 0.4), Vec2.unit(0)),

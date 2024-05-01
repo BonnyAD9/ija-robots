@@ -1,12 +1,17 @@
 package ija.robots.actors;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ija.robots.common.Rect;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 
 public class Room {
     private Pane view;
+    private Timer timer;
+    private int a = 0;
 
     private Rect bounds;
     private ArrayList<Robot> robots = new ArrayList<>();
@@ -15,6 +20,26 @@ public class Room {
     public Room(Rect bounds) {
         view = new Pane();
         this.bounds = bounds;
+        timer = null;
+        run(true);
+    }
+
+    public void run(boolean play) {
+        if (play && timer == null) {
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    Platform.runLater(() -> tick(10. / 1000.));
+                }
+            }, 0, 10);
+        } else if (!play && timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    private void tick(double delta) {
+        System.out.println(a += 1);
     }
 
     public Rect bounds() {
