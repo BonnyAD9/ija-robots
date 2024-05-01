@@ -7,7 +7,10 @@ import java.util.TimerTask;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.application.Platform;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /**
  * Room with robots and obstacles.
@@ -30,6 +33,9 @@ public class Room {
      */
     public Room(Rect bounds) {
         view = new Pane();
+        view.setPrefWidth(bounds.width());
+        view.setPrefHeight(bounds.height());
+        view.setStyle("-fx-background-color: #222222");
         this.bounds = bounds;
         timer = null;
         run(true);
@@ -90,6 +96,12 @@ public class Room {
      */
     public Pane getGraphics() {
         return view;
+    }
+
+    public void resize(Rect bounds) {
+        this.bounds = bounds;
+        view.setPrefWidth(bounds.width());
+        view.setPrefHeight(bounds.height());
     }
 
     //=======================================================================//

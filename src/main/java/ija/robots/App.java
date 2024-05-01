@@ -7,7 +7,11 @@ import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -35,8 +39,17 @@ public class App extends Application {
             //     new Robot(new Circle(0.5, 3.5, 0.4), Vec2.unit(0)),
             // };
 
-            Scene scene = new Scene(room.getGraphics(), 800, 600);
-            scene.setFill(Color.web("#222222"));
+            var root = new FlowPane(Orientation.VERTICAL, room.getGraphics());
+
+            Scene scene = new Scene(root, 800, 600);
+
+            ChangeListener<Number> resizeListener =
+                (observable, oldValue, newValue) -> {
+                    room.resize(new Rect(0, 0, scene.getWidth(), scene.getHeight()));
+                };
+            stage.widthProperty().addListener(resizeListener);
+            stage.heightProperty().addListener(resizeListener);
+            //scene.setFill(Color.web("#222222"));
 
             stage.setScene(scene);
             stage.setTitle("IJA robots");
