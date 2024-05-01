@@ -7,10 +7,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Immovable obstacle represented by a rectangle.
+ */
 public class Obstacle {
-    private static final double BORDER_THICKNESS = 6;
-    private static final double ADJ = BORDER_THICKNESS / 2;
-
+    /**
+     * Dragging state of the obstacle.
+     */
     private class State {
         static final int NONE = 0x0;
         static final int DRAGGING = 0x1;
@@ -20,10 +23,21 @@ public class Obstacle {
         static final int RESIZE_TOP = 0x10;
     }
 
+    private static final double BORDER_THICKNESS = 6;
+    private static final double ADJ = BORDER_THICKNESS / 2;
+
     private Rectangle shape;
     private Vec2 lastPos = new Vec2(0, 0);
     private int state = State.NONE;
 
+    //=======================================================================//
+    //                                PUBLIC                                 //
+    //=======================================================================//
+
+    /**
+     * Creates new obstacle with the given size.
+     * @param rect Size and position of the obstacle.
+     */
     public Obstacle(Rect rect) {
         shape = new Rectangle(rect.x(), rect.y(), rect.width(), rect.height());
         shape.setFill(Color.web("#ff5555"));
@@ -36,14 +50,18 @@ public class Obstacle {
         shape.setOnMouseExited(e -> shape.setCursor(Cursor.DEFAULT));
     }
 
+    /**
+     * Gets the top left corner of the hitbox of the obstacle.
+     * @return Top left corner of the obstacle hitbox.
+     */
     public Vec2 pos() {
         return apos().sub(ADJ, ADJ);
     }
 
-    private Vec2 apos() {
-        return new Vec2(shape.getX(), shape.getY());
-    }
-
+    /**
+     * Gets the hitbox of the obstacle.
+     * @return Hitbox of the obstacle.
+     */
     public Rect hitbox() {
         return new Rect(
             pos(),
@@ -52,11 +70,32 @@ public class Obstacle {
         );
     }
 
+    /**
+     * Sets the hitbox of the obstacle.
+     * @param box The new hitbox.
+     * @return The new hitbox.
+     */
     public Rect hitbox(Rect box) {
         shape.setWidth(box.width() - ADJ * 2);
         shape.setHeight(box.height() - ADJ * 2);
         moveTo(box.topLeft().add(ADJ, ADJ));
         return box;
+    }
+
+    /**
+     * Gets the shape of the obstacle that can be drawn.
+     * @return Shape of the obstacle to be drawn.
+     */
+    public Rectangle getShape() {
+        return shape;
+    }
+
+    //=======================================================================//
+    //                               PRIVATE                                 //
+    //=======================================================================//
+
+    private Vec2 apos() {
+        return new Vec2(shape.getX(), shape.getY());
     }
 
     private void moveBy(Vec2 vec) {
@@ -66,10 +105,6 @@ public class Obstacle {
     private void moveTo(Vec2 pos) {
         shape.setX(pos.x());
         shape.setY(pos.y());
-    }
-
-    public Rectangle getShape() {
-        return shape;
     }
 
     private void mousePress(MouseEvent event) {

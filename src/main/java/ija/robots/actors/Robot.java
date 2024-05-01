@@ -7,17 +7,32 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+/**
+ * Represents robot that can move. It is the base class for all other robots.
+ */
 public class Robot {
-    private static final double RADIUS = 30;
+    private static final double RADIUS = 25;
     private static final double BORDER_THICKNESS = 6;
     private static final double ADJ = BORDER_THICKNESS / 2;
 
     private Circle shape;
     private Vec2 lastPos = new Vec2(0, 0);
+    private boolean isDragging;
 
-    double speed;
-    double angle;
+    private double speed;
+    private double angle;
 
+    //=======================================================================//
+    //                                PUBLIC                                 //
+    //=======================================================================//
+
+    /**
+     * Crates new robot at the given position.
+     * @param topLeft Position of the top left corner of the bounding box of
+     * the robot
+     * @param speed The movement speed of the robot. (pixels per second)
+     * @param angle The direction that the robot is facing. (radians)
+     */
     public Robot(Vec2 topLeft, double speed, double angle) {
         shape = new Circle(topLeft.x() + RADIUS, topLeft.y() + RADIUS, RADIUS);
         shape.setFill(Color.web("#cc55cc"));
@@ -25,7 +40,7 @@ public class Robot {
         shape.setStrokeWidth(BORDER_THICKNESS);
         shape.setOnMousePressed(e -> mousePress(e));
         shape.setOnMouseDragged(e -> mouseDrag(e));
-        shape.setOnMouseReleased(e -> shape.setCursor(Cursor.OPEN_HAND));
+        shape.setOnMouseReleased(e -> mouseRelease(e));
         shape.setOnMouseEntered(e -> shape.setCursor(Cursor.OPEN_HAND));
         shape.setOnMouseExited(e -> shape.setCursor(Cursor.DEFAULT));
         shape.setOnMouseMoved(e -> shape.setCursor(Cursor.OPEN_HAND));
@@ -33,6 +48,10 @@ public class Robot {
         this.angle = angle;
     }
 
+    /**
+     * Gets the bounding box of the hitbox of the robot.
+     * @return Bounding box of the hitbox of this.
+     */
     public Rect hitbox() {
         return new Rect(
             pos(),
@@ -41,18 +60,93 @@ public class Robot {
         );
     }
 
+    /**
+     * Sets the bounding box of the hitbox of the robot. (Only position is
+     * taken into acount)
+     * @param rect New position of the robot.
+     * @return The value passed in.
+     */
     public Rect hitbox(Rect rect) {
         moveTo(rect.topLeft().add(ADJ, ADJ));
         return rect;
     }
 
+    /**
+     * Gets the speed of the robot.
+     * @return Speed of the robot. (pixels per second)
+     */
     public double speed() {
         return speed;
     }
 
+    /**
+     * Sets the speed of the robot.
+     * @param speed Speed of the robot. (pixels per second)
+     * @return The new speed.
+     */
     public double speed(double speed) {
         return this.speed = speed;
     }
+
+    /**
+     * Sets the direction that the robot is facing.
+     * @param angle The new direction. (radians)
+     */
+    public void angle(double angle) {
+        this.angle = angle;
+    }
+
+    /**
+     * Gets the shape of the robot that can be drawn.
+     * @return Shape of the robot that can be drawn.
+     */
+    public Circle getShape() {
+        return shape;
+    }
+
+    /**
+     * Gets the position of the top left corner of the robot.
+     * @return Position of the top left corner of the robot hitbox.
+     */
+    public Vec2 pos() {
+        return apos().sub(ADJ, ADJ);
+    }
+
+    /**
+     * Gets the orientation of the robot as a unit vector.
+     * @return Orientation of the robot as a unit vector.
+     */
+    public Vec2 vecAngle() {
+        return Vec2.unit(angle);
+    }
+
+    /**
+     * Gets the move vector of the robot.
+     * @return The move vector of the robot that contains the angle and speed.
+     */
+    public Vec2 step() {
+        return Vec2.polar(speed, angle);
+    }
+
+    /**
+     * Move the robot.
+     * @param delta Time ellapsed in seconds.
+     */
+    public void move(double delta) {
+        moveBy(step().mul(delta));
+    }
+
+    /**
+     * Checks whether the robod is currently dragged by the user.
+     * @return true if robot is dragged, otherwise false
+     */
+    public boolean isDragging() {
+        return isDragging;
+    }
+
+    //=======================================================================//
+    //                               PRIVATE                                 //
+    //=======================================================================//
 
     private void moveBy(Vec2 vec) {
         moveTo(apos().add(vec));
@@ -63,18 +157,6 @@ public class Robot {
         shape.setCenterY(pos.y() + RADIUS);
     }
 
-    public void angle(double angle) {
-        this.angle = angle;
-    }
-
-    public Circle getShape() {
-        return shape;
-    }
-
-    public Vec2 pos() {
-        return apos().sub(ADJ, ADJ);
-    }
-
     private Vec2 apos() {
         return new Vec2(
             shape.getCenterX() - RADIUS,
@@ -83,8 +165,14 @@ public class Robot {
     }
 
     private void mousePress(MouseEvent event) {
+        isDragging = true;
         shape.setCursor(Cursor.CLOSED_HAND);
         lastPos = new Vec2(event.getX(), event.getY());
+    }
+
+    private void mouseRelease(MouseEvent event) {
+        shape.setCursor(Cursor.OPEN_HAND);
+        isDragging = false;
     }
 
     private void mouseDrag(MouseEvent event) {
