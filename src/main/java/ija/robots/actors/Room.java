@@ -104,6 +104,10 @@ public class Room {
         view.setPrefHeight(bounds.height());
     }
 
+    public boolean isRunning() {
+        return timer != null;
+    }
+
     //=======================================================================//
     //                               PRIVATE                                 //
     //=======================================================================//
