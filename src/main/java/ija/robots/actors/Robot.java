@@ -8,15 +8,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class Robot {
-    private static final double RADIUS = 30;
+    private static final double RADIUS = 25;
     private static final double BORDER_THICKNESS = 6;
     private static final double ADJ = BORDER_THICKNESS / 2;
 
     private Circle shape;
     private Vec2 lastPos = new Vec2(0, 0);
+    private boolean isDragging;
 
-    double speed;
-    double angle;
+    private double speed;
+    private double angle;
+
+    //=======================================================================//
+    //                                PUBLIC                                 //
+    //=======================================================================//
 
     public Robot(Vec2 topLeft, double speed, double angle) {
         shape = new Circle(topLeft.x() + RADIUS, topLeft.y() + RADIUS, RADIUS);
@@ -25,7 +30,7 @@ public class Robot {
         shape.setStrokeWidth(BORDER_THICKNESS);
         shape.setOnMousePressed(e -> mousePress(e));
         shape.setOnMouseDragged(e -> mouseDrag(e));
-        shape.setOnMouseReleased(e -> shape.setCursor(Cursor.OPEN_HAND));
+        shape.setOnMouseReleased(e -> mouseRelease(e));
         shape.setOnMouseEntered(e -> shape.setCursor(Cursor.OPEN_HAND));
         shape.setOnMouseExited(e -> shape.setCursor(Cursor.DEFAULT));
         shape.setOnMouseMoved(e -> shape.setCursor(Cursor.OPEN_HAND));
@@ -54,15 +59,6 @@ public class Robot {
         return this.speed = speed;
     }
 
-    private void moveBy(Vec2 vec) {
-        moveTo(apos().add(vec));
-    }
-
-    private void moveTo(Vec2 pos) {
-        shape.setCenterX(pos.x() + RADIUS);
-        shape.setCenterY(pos.y() + RADIUS);
-    }
-
     public void angle(double angle) {
         this.angle = angle;
     }
@@ -75,6 +71,35 @@ public class Robot {
         return apos().sub(ADJ, ADJ);
     }
 
+    public Vec2 vecAngle() {
+        return Vec2.unit(angle);
+    }
+
+    public Vec2 step() {
+        return Vec2.polar(speed, angle);
+    }
+
+    public void move(double delta) {
+        moveBy(step().mul(delta));
+    }
+
+    public boolean isDragging() {
+        return isDragging;
+    }
+
+    //=======================================================================//
+    //                               PRIVATE                                 //
+    //=======================================================================//
+
+    private void moveBy(Vec2 vec) {
+        moveTo(apos().add(vec));
+    }
+
+    private void moveTo(Vec2 pos) {
+        shape.setCenterX(pos.x() + RADIUS);
+        shape.setCenterY(pos.y() + RADIUS);
+    }
+
     private Vec2 apos() {
         return new Vec2(
             shape.getCenterX() - RADIUS,
@@ -83,8 +108,14 @@ public class Robot {
     }
 
     private void mousePress(MouseEvent event) {
+        isDragging = true;
         shape.setCursor(Cursor.CLOSED_HAND);
         lastPos = new Vec2(event.getX(), event.getY());
+    }
+
+    private void mouseRelease(MouseEvent event) {
+        shape.setCursor(Cursor.OPEN_HAND);
+        isDragging = false;
     }
 
     private void mouseDrag(MouseEvent event) {

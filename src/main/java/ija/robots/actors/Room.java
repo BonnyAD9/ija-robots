@@ -11,7 +11,6 @@ import javafx.scene.layout.Pane;
 public class Room {
     private Pane view;
     private Timer timer;
-    private int a = 0;
 
     private Rect bounds;
     private ArrayList<Robot> robots = new ArrayList<>();
@@ -27,11 +26,15 @@ public class Room {
     public void run(boolean play) {
         if (play && timer == null) {
             timer = new Timer();
-            timer.schedule(new TimerTask() {
-                public void run() {
-                    Platform.runLater(() -> tick(10. / 1000.));
-                }
-            }, 0, 10);
+            timer.schedule(
+                new TimerTask() {
+                    public void run() {
+                        Platform.runLater(() -> tick(10. / 1000.));
+                    }
+                },
+                0,
+                10
+            );
         } else if (!play && timer != null) {
             timer.cancel();
             timer = null;
@@ -39,7 +42,11 @@ public class Room {
     }
 
     private void tick(double delta) {
-        System.out.println(a += 1);
+        for (var r : robots) {
+            if (!r.isDragging()) {
+                r.move(delta);
+            }
+        }
     }
 
     public Rect bounds() {
