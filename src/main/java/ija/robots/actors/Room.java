@@ -123,6 +123,17 @@ public class Room {
                 }
             }
         }
+
+        for (int i = 0; i < robots.size(); ++i) {
+            if (robots.get(i).isDragging()) {
+                continue;
+            }
+            for (int j = i + 1; j < robots.size(); ++j) {
+                if (!robots.get(j).isDragging()) {
+                    robotCollision(robots.get(i), robots.get(j));
+                }
+            }
+        }
     }
 
     private void borderCollision(Robot rob) {
@@ -207,5 +218,23 @@ public class Room {
         mv = mv.sub(mv.mul(r / mv.len()));
 
         rob.hitbox(box.moveBy(mv));
+    }
+
+    private void robotCollision(Robot r1, Robot r2) {
+        var c1 = r1.hitbox();
+        var c2 = r2.hitbox();
+        var dir = c2.topLeft().sub(c1.topLeft());
+        var cw = (c1.width() + c2.width()) / 2;
+        var dirLen = dir.len();
+        var over = cw - dirLen;
+
+        if (over <= 0) {
+            // No collision
+            return;
+        }
+
+        dir = dirLen == 0 ? new Vec2(0, 0) : dir.mul(over / (2 * dirLen));
+        r1.hitbox(c1.moveBy(dir.negate()));
+        r2.hitbox(c2.moveBy(dir));
     }
 }

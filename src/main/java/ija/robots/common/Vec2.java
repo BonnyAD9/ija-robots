@@ -130,6 +130,10 @@ public final class Vec2 {
             || equals(line);
     }
 
+    public Vec2 negate() {
+        return new Vec2(-x, -y);
+    }
+
     @Override
     public String toString() {
         return "[" + x + ", " + y + "]";
