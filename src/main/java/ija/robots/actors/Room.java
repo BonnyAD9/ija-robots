@@ -96,10 +96,39 @@ public class Room {
     //=======================================================================//
 
     private void tick(double delta) {
+        moveRobots(delta);
+
+        for (var r : robots) {
+            if (!r.isDragging()) {
+                borderCollision(r);
+            }
+        }
+    }
+
+    private void moveRobots(double delta) {
         for (var r : robots) {
             if (!r.isDragging()) {
                 r.move(delta);
             }
         }
+    }
+
+    private void borderCollision(Robot rob) {
+        var bounds = bounds();
+        var r = rob.hitbox();
+
+        if (r.left() < bounds.left()) {
+            r = r.left(bounds.left());
+        } else if (r.right() > bounds.right()) {
+            r = r.right(bounds.right());
+        }
+
+        if (r.top() < bounds.top()) {
+            r = r.top(bounds.top());
+        } else if (r.bottom() > bounds.bottom()) {
+            r = r.bottom(bounds.bottom());
+        }
+
+        rob.hitbox(r);
     }
 }
