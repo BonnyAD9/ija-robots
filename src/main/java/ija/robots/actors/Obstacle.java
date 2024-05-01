@@ -91,6 +91,10 @@ public class Obstacle {
         return shape;
     }
 
+    /**
+     * Checks whether the obstacle is currently dragged by the user.
+     * @return true if obstacle is dragged by the user, otherwise false.
+     */
     public boolean isDragging() {
         return state == State.DRAGGING;
     }
