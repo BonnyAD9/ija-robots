@@ -24,6 +24,10 @@ public final class Vec2 {
         return new Vec2(x * scalar, y * scalar);
     }
 
+    public Vec2 div(double scalar) {
+        return new Vec2(x / scalar, y / scalar);
+    }
+
     public double dot(Vec2 other) {
         return x * other.x + y * other.y;
     }
@@ -116,9 +120,7 @@ public final class Vec2 {
     }
 
     public boolean contains(double point) {
-        return x < y
-            ? x < point && y > point
-            : y < point && x > point;
+        return x < point && y > point;
     }
 
     public boolean overlaps(Vec2 line) {

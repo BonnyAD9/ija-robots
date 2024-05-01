@@ -44,6 +44,7 @@ public class Obstacle {
         shape.setStroke(Color.WHITE);
         shape.setStrokeWidth(BORDER_THICKNESS);
         shape.setOnMousePressed(e -> mousePress(e));
+        shape.setOnMouseReleased(e -> mouseRelease(e));
         shape.setOnMouseDragged(e -> mouseDrag(e));
         shape.setOnMouseEntered(e -> hover(e));
         shape.setOnMouseMoved(e -> hover(e));
@@ -90,6 +91,10 @@ public class Obstacle {
         return shape;
     }
 
+    public boolean isDragging() {
+        return state == State.DRAGGING;
+    }
+
     //=======================================================================//
     //                               PRIVATE                                 //
     //=======================================================================//
@@ -112,6 +117,10 @@ public class Obstacle {
             shape.setCursor(Cursor.CLOSED_HAND);
             state = State.DRAGGING;
         }
+    }
+
+    private void mouseRelease(MouseEvent event) {
+        state = State.NONE;
     }
 
     private void mouseDrag(MouseEvent event) {

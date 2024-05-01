@@ -130,10 +130,6 @@ public final class Rect {
         return circle.overlaps(this);
     }
 
-    public Rect moveTo(Vec2 vec) {
-        return new Rect(vec, size);
-    }
-
     public Rect moveBy(Vec2 vec) {
         return new Rect(pos.add(vec), size);
     }
@@ -151,7 +147,7 @@ public final class Rect {
     }
 
     public Rect left(double l) {
-        return moveTo(pos.x(l));
+        return pos(pos.x(l));
     }
 
     public double right() {
@@ -159,7 +155,7 @@ public final class Rect {
     }
 
     public Rect right(double r) {
-        return moveTo(pos.x(r - size.width()));
+        return pos(pos.x(r - size.width()));
     }
 
     public double top() {
@@ -167,7 +163,7 @@ public final class Rect {
     }
 
     public Rect top(double t) {
-        return moveTo(pos.y(t));
+        return pos(pos.y(t));
     }
 
     public double bottom() {
@@ -175,7 +171,15 @@ public final class Rect {
     }
 
     public Rect bottom(double b) {
-        return moveTo(pos.y(b - size.height()));
+        return pos(pos.y(b - size.height()));
+    }
+
+    public Vec2 horizontal() {
+        return new Vec2(left(), right());
+    }
+
+    public Vec2 vertical() {
+        return new Vec2(top(), bottom());
     }
 
     @Override
