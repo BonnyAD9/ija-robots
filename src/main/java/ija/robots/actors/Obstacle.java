@@ -2,6 +2,7 @@ package ija.robots.actors;
 
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -30,6 +31,9 @@ public class Obstacle {
         shape.setStrokeWidth(BORDER_THICKNESS);
         shape.setOnMousePressed(e -> mousePress(e));
         shape.setOnMouseDragged(e -> mouseDrag(e));
+        shape.setOnMouseEntered(e -> hover(e));
+        shape.setOnMouseMoved(e -> hover(e));
+        shape.setOnMouseExited(e -> shape.setCursor(Cursor.DEFAULT));
     }
 
     public Vec2 pos() {
@@ -69,24 +73,8 @@ public class Obstacle {
     }
 
     private void mousePress(MouseEvent event) {
-        lastPos = new Vec2(event.getX(), event.getY());
-        var relPos = lastPos.sub(apos());
-
-        state = State.NONE;
-
-        if (relPos.x() < ADJ) {
-            state |= State.RESIZE_HORIZONTAL | State.RESIZE_LEFT;
-        } else if (shape.getWidth() - relPos.x() <= ADJ) {
-            state |= State.RESIZE_HORIZONTAL;
-        }
-
-        if (relPos.y() < ADJ) {
-            state |= State.RESIZE_VERTICAL | State.RESIZE_TOP;
-        } else if (shape.getHeight() - relPos.y() <= ADJ) {
-            state |= State.RESIZE_VERTICAL;
-        }
-
         if (state == State.NONE) {
+            shape.setCursor(Cursor.CLOSED_HAND);
             state = State.DRAGGING;
         }
     }
@@ -131,6 +119,54 @@ public class Obstacle {
                 state ^= State.RESIZE_TOP;
             }
             shape.setHeight(h);
+        }
+    }
+
+    private void hover(MouseEvent event) {
+        lastPos = new Vec2(event.getX(), event.getY());
+        var relPos = lastPos.sub(apos());
+
+        state = State.NONE;
+
+        if (relPos.x() < ADJ) {
+            state |= State.RESIZE_HORIZONTAL | State.RESIZE_LEFT;
+        } else if (shape.getWidth() - relPos.x() <= ADJ) {
+            state |= State.RESIZE_HORIZONTAL;
+        }
+
+        if (relPos.y() < ADJ) {
+            state |= State.RESIZE_VERTICAL | State.RESIZE_TOP;
+        } else if (shape.getHeight() - relPos.y() <= ADJ) {
+            state |= State.RESIZE_VERTICAL;
+        }
+
+        switch (state) {
+            case State.RESIZE_HORIZONTAL
+                | State.RESIZE_VERTICAL
+                | State.RESIZE_LEFT
+                | State.RESIZE_TOP:
+            case State.RESIZE_HORIZONTAL | State.RESIZE_VERTICAL:
+                shape.setCursor(Cursor.NW_RESIZE);
+                break;
+            case State.RESIZE_HORIZONTAL
+                | State.RESIZE_VERTICAL
+                | State.RESIZE_TOP:
+            case State.RESIZE_HORIZONTAL
+                | State.RESIZE_VERTICAL
+                | State.RESIZE_LEFT:
+                shape.setCursor(Cursor.NE_RESIZE);
+                break;
+            case State.RESIZE_HORIZONTAL:
+            case State.RESIZE_HORIZONTAL | State.RESIZE_LEFT:
+                shape.setCursor(Cursor.E_RESIZE);
+                break;
+            case State.RESIZE_VERTICAL:
+            case State.RESIZE_VERTICAL | State.RESIZE_TOP:
+                shape.setCursor(Cursor.N_RESIZE);
+                break;
+            default:
+                shape.setCursor(Cursor.OPEN_HAND);
+                break;
         }
     }
 

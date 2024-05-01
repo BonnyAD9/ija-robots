@@ -2,6 +2,7 @@ package ija.robots.actors;
 
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -24,6 +25,10 @@ public class Robot {
         shape.setStrokeWidth(BORDER_THICKNESS);
         shape.setOnMousePressed(e -> mousePress(e));
         shape.setOnMouseDragged(e -> mouseDrag(e));
+        shape.setOnMouseReleased(e -> shape.setCursor(Cursor.OPEN_HAND));
+        shape.setOnMouseEntered(e -> shape.setCursor(Cursor.OPEN_HAND));
+        shape.setOnMouseExited(e -> shape.setCursor(Cursor.DEFAULT));
+        shape.setOnMouseMoved(e -> shape.setCursor(Cursor.OPEN_HAND));
         this.speed = speed;
         this.angle = angle;
     }
@@ -78,6 +83,7 @@ public class Robot {
     }
 
     private void mousePress(MouseEvent event) {
+        shape.setCursor(Cursor.CLOSED_HAND);
         lastPos = new Vec2(event.getX(), event.getY());
     }
 
