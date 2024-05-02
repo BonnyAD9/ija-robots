@@ -97,6 +97,10 @@ public class Robot extends SimObj {
         this.angle = angle;
     }
 
+    public double angle() {
+        return angle;
+    }
+
     /**
      * Gets the shape of the robot that can be drawn.
      * @return Shape of the robot that can be drawn.

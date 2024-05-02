@@ -1,5 +1,8 @@
 package ija.robots;
 
+import java.util.function.BiConsumer;
+
+import ija.robots.actors.Robot;
 import ija.robots.actors.SimObj;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -7,12 +10,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 
 public class ReditMenu {
     private SimObj obj;
@@ -24,6 +25,9 @@ public class ReditMenu {
 
     private HBox speedPane;
     private TextField speedField;
+
+    private HBox anglePane;
+    private TextField angleField;
 
     private SimHandler<SimObj> onRemove = null;
 
@@ -58,7 +62,16 @@ public class ReditMenu {
 
         pane.setVisible(true);
         all.setVisible(true);
-        speedField.setEditable(true);
+
+        if (!(obj instanceof Robot r)) {
+            robot.setVisible(false);
+            return;
+        }
+
+        robot.setVisible(true);
+
+        speedField.setText(String.format("%.2f", r.speed()));
+        angleField.setText(String.format("%.2f", r.angle()));
     }
 
     public void setOnRemove(SimHandler<SimObj> val) {
@@ -95,7 +108,7 @@ public class ReditMenu {
     }
 
     private HBox robotPane() {
-        robot = new HBox(5, speed());
+        robot = new HBox(5, speed(), angle());
         robot.setPadding(new Insets(0, 0, 0, 5));
         robot.setAlignment(Pos.CENTER_LEFT);
         return robot;
@@ -110,6 +123,58 @@ public class ReditMenu {
     private TextField speedField() {
         speedField = new TextField();
         speedField.setPrefWidth(60);
+        speedField.setTextFormatter(numberFormatter(0, Double.MAX_VALUE));
+        setNumber(speedField, (s, r) -> r.speed(s), Robot.class);
         return speedField;
+    }
+
+    private HBox angle() {
+        anglePane = new HBox(5, new Label("angle:"), angleField());
+        anglePane.setAlignment(Pos.CENTER_LEFT);
+        return anglePane;
+    }
+
+    private TextField angleField() {
+        angleField = new TextField();
+        angleField.setPrefWidth(60);
+        angleField.setTextFormatter(numberFormatter(-360, 360));
+        setNumber(angleField, (a, r) -> r.angle(a), Robot.class);
+        return angleField;
+    }
+
+    private TextFormatter<?> numberFormatter(double min, double max) {
+        return new TextFormatter<>(c -> {
+            var txt = c.getControlNewText();
+            if (txt.isEmpty() || min < 0 && txt.equals("-")) {
+                return c;
+            }
+            try {
+                var n = Double.parseDouble(txt);
+                if (n >= min && n <= max) {
+                    return c;
+                }
+            } catch (NumberFormatException ex) {}
+            c.setText("");
+            c.setRange(c.getRangeStart(), c.getRangeStart());
+            return c;
+        });
+    }
+
+    private <T extends SimObj> void setNumber(
+        TextField field,
+        BiConsumer<Double, T> setter,
+        Class<T> clazz
+    ) {
+        field.setOnKeyPressed(e -> {
+            if (e.getCode() != KeyCode.ENTER) {
+                return;
+            }
+            e.consume();
+            try {
+                setter.accept(
+                    Double.parseDouble(field.getText()), clazz.cast(obj)
+                );
+            } catch (Exception ex) {}
+        });
     }
 }
