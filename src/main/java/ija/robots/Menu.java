@@ -63,6 +63,16 @@ class ObstacleButton {
         return shape;
     }
 
+    /**
+     * Sets position of the obstacle button
+     * @param pos new position
+     */
+    public void setPos(Vec2 pos) {
+        this.pos = pos;
+        shape.setX(pos.x());
+        shape.setY(pos.y());
+    }
+
     private void createShape() {
         shape = new Rectangle(pos.x(), pos.y(), 60, 60);
         shape.setFill(Color.web("#ff5555"));
@@ -139,6 +149,16 @@ class RobotButton {
         return shape;
     }
 
+    /**
+     * Sets position of the robot button
+     * @param pos new position
+     */
+    public void setPos(Vec2 pos) {
+        this.pos = new Vec2(pos.x() + 25, pos.y() + 25);
+        shape.setCenterX(this.pos.x());
+        shape.setCenterY(this.pos.y());
+    }
+
     private void createShape() {
         shape = new Circle(this.pos.x(), this.pos.y(), 25);
         shape.setFill(Color.web("#cc55cc"));
@@ -172,6 +192,10 @@ class RobotButton {
 
 public class Menu {
     StackPane menu;
+    ObstacleButton obstBtn;
+    ObstacleButton obstGhost;
+    RobotButton robBtn;
+    RobotButton robGhost;
 
     public Menu(Room room, Rect rect) {
         var btn = new Button("close");
@@ -182,12 +206,12 @@ public class Menu {
         bg.setStyle("-fx-background-color: #404040");
 
         var pane = new Pane();
-        var paneMid = rect.height() / 2;
+        var paneMid = (rect.height() - 40) / 2;
 
-        var obstGhost = new ObstacleButton(new Vec2(20, paneMid - 70));
-        var obstBtn = new ObstacleButton(this, room, new Vec2(20, paneMid - 70));
-        var robGhost = new RobotButton(new Vec2(25, paneMid + 10));
-        var robBtn = new RobotButton(this, room, new Vec2(25, paneMid + 10));
+        obstGhost = new ObstacleButton(new Vec2(20, paneMid - 30));
+        obstBtn = new ObstacleButton(this, room, new Vec2(20, paneMid - 30));
+        robGhost = new RobotButton(new Vec2(25, paneMid + 50));
+        robBtn = new RobotButton(this, room, new Vec2(25, paneMid + 50));
         pane.getChildren().addAll(
             obstGhost.getShape(),
             obstBtn.getShape(),
@@ -204,6 +228,14 @@ public class Menu {
 
     public StackPane getGraphics() {
         return menu;
+    }
+
+    public void resize(Vec2 bounds) {
+        var paneMid = (bounds.height() - 40) / 2;
+        obstBtn.setPos(new Vec2(20, paneMid - 30));
+        obstGhost.setPos(new Vec2(20, paneMid - 30));
+        robBtn.setPos(new Vec2(25, paneMid + 50));
+        robGhost.setPos(new Vec2(25, paneMid + 50));
     }
 
     public void setVisible(boolean vis) {

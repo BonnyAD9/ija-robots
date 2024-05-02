@@ -55,6 +55,10 @@ public class App extends Application {
 
             var stack = new StackPane();
             StackPane.setMargin(menuButton, new Insets(5));
+            StackPane.setMargin(
+                menu.getGraphics(),
+                new Insets(0, 0, 40, 0)
+            );
             stack.setAlignment(Pos.TOP_LEFT);
             stack.getChildren().addAll(root, menuButton, menu.getGraphics());
 
@@ -62,7 +66,12 @@ public class App extends Application {
 
             ChangeListener<Number> resizeListener =
                 (observable, oldValue, newValue) -> {
-                    room.resize(new Rect(0, 0, scene.getWidth(), scene.getHeight() - simMenu.getHeight()));
+                    var rsize = new Vec2(
+                        scene.getWidth(),
+                        scene.getHeight() - simMenu.getHeight()
+                    );
+                    room.resize(new Rect(0, 0, rsize.width(), rsize.height()));
+                    menu.resize(new Vec2(rsize.width(), rsize.height()));
                 };
             stage.widthProperty().addListener(resizeListener);
             stage.heightProperty().addListener(resizeListener);
