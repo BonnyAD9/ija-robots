@@ -93,6 +93,20 @@ public class Room {
         view.getChildren().add(obstacle.getShape());
     }
 
+    public void remove(SimObj obj) {
+        if (obj == selected) {
+            select(null);
+        }
+
+        if (obj instanceof Robot r) {
+            view.getChildren().remove(r.getShape());
+            robots.remove(r);
+        } else if (obj instanceof Obstacle o) {
+            view.getChildren().remove(o.getShape());
+            obstacles.remove(o);
+        }
+    }
+
     /**
      * Gets the view of the room that can be drawn.
      * @return Drawable view of the room.

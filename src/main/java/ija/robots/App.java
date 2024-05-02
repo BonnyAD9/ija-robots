@@ -46,6 +46,7 @@ public class App extends Application {
             menuButton.setOnMouseClicked(e -> menu.setVisible(true));
 
             room.setOnSelect(e -> reditMenu.select(e));
+            reditMenu.setOnRemove(e -> room.remove(e));
             stage.setOnCloseRequest(e -> room.run(false));
 
             // Robot[] robots = {
