@@ -2,6 +2,10 @@ package ija.robots.actors;
 
 import java.util.function.Consumer;
 
+import java.io.FileWriter;
+import java.io.IOError;
+import java.io.IOException;
+
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.scene.Cursor;
@@ -71,6 +75,25 @@ public class Robot extends SimObj {
      */
     public Robot(Robot r) {
         this(r.apos(), r.speed(), r.angle());
+    }
+
+    /**
+     * Creates new robot and takes the parameters from existing robot.
+     * @param r Robot to take the parameters from.
+     */
+    public Robot(Robot r) {
+        this(r.apos(), r.speed(), r.angle());
+    }
+
+    /**
+     * Save robot to a file
+     * @param writer file writer to save robot into
+     * @throws IOException
+     */
+    public void save(FileWriter writer) throws IOException {
+        writer.write(String.format(
+            "robot: [%lf, %lf] { speed: %lf, angle: %lf }"
+        ));
     }
 
     /**
@@ -216,6 +239,17 @@ public class Robot extends SimObj {
      */
     public void setOnAngleChange(Consumer<Double> val) {
         onAngleChange = val;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "robot: [%f, %f] { speed: %f, angle: %f }",
+            hitbox().x(),
+            hitbox().y(),
+            speed,
+            angle
+        );
     }
 
     //=======================================================================//

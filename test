@@ -1,0 +1,5 @@
+room: 800.0x520.0
+obstacle: 66.000000x66.000000 [97.000000, 197.000000]
+control_robot: [197.000000, 97.000000] { speed: 20.000000, angle: 1.570796, rotation_speed: 0.785398 }
+robot: [198.000000, 197.000000] { speed: 0.000000, angle: 0.000000 }
+auto_robot: [297.000000, 172.800000] { speed: 20.000000, angle: 1.570796, rotation_speed: 0.785398, elide_dist: 20.000000, elide_rot: 1.155727 }

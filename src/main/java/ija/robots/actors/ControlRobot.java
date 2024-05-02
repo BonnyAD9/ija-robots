@@ -10,6 +10,10 @@ public class ControlRobot extends Robot {
     private double curSpeed = 0;
     private double curRotSpeed = 0;
 
+    //=======================================================================//
+    //                                PUBLIC                                 //
+    //=======================================================================//
+
     /**
      * Creates new controlled robot
      * @param topLeft position of the robot
@@ -121,5 +125,17 @@ public class ControlRobot extends Robot {
         } else {
             curRotSpeed = Math.max(curRotSpeed - rotSpeed, 0.);
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "control_robot: [%f, %f] { speed: %f, angle: %f, rotation_speed: %f }",
+            hitbox().x(),
+            hitbox().y(),
+            sspeed,
+            angle(),
+            rotSpeed
+        );
     }
 }

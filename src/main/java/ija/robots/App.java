@@ -15,7 +15,10 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -25,7 +28,7 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
     private Room room;
-    private FlowPane simMenu;
+    private HBox simMenu;
     private Menu menu;
     private ReditMenu reditMenu;
 
@@ -108,7 +111,14 @@ public class App extends Application {
     //                               PRIVATE                                 //
     //=======================================================================//
 
-    private FlowPane simMenu() {
+    private HBox simMenu() {
+        var path = new TextField();
+
+        var save = new Button("save");
+        save.setOnMouseClicked(e -> room.save(path.getText()));
+
+        var load = new Button("load");
+
         var but = new Button("pause");
         but.setPrefWidth(60);
         but.setOnMouseClicked(e -> {
@@ -116,9 +126,11 @@ public class App extends Application {
             but.setText(run ? "pause" : "play");
             room.run(run);
         });
-        var res = new FlowPane(5, 5, but);
-        res.setPadding(new Insets(5));
+
+        var res = new HBox(5, path, save, load, but);
+        HBox.setHgrow(path, Priority.ALWAYS);
         res.setAlignment(Pos.CENTER_RIGHT);
+        res.setPadding(new Insets(5));
         res.setPrefHeight(40);
         return res;
     }

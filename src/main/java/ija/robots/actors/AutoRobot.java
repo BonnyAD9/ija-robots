@@ -163,4 +163,19 @@ public class AutoRobot extends Robot {
 
         super.move(delta, distance);
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "auto_robot: [%f, %f] { speed: %f, angle: %f, rotation_speed: " +
+            "%f, elide_dist: %f, elide_rot: %f }",
+            hitbox().x(),
+            hitbox().y(),
+            sspeed,
+            angle(),
+            rspeed,
+            edist,
+            erot
+        );
+    }
 }

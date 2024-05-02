@@ -1,5 +1,7 @@
 package ija.robots.actors;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,6 +10,9 @@ import java.util.function.Consumer;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
@@ -69,6 +74,33 @@ public class Room {
             timer.cancel();
             timer = null;
         }
+    }
+
+    /**
+     * Saves room to the file
+     * @param filename name of the file to save into
+     */
+    public void save(String filename) {
+        try {
+            FileWriter writer = new FileWriter(filename);
+            writer.write(
+                "room: " + bounds.width() + "x" + bounds.height() + "\n"
+            );
+            for (var obst : obstacles) {
+                writer.write(obst + "\n");
+            }
+            for (var rob : robots) {
+                writer.write(rob + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            Alert alert = new Alert(
+                AlertType.ERROR,
+                "File cannot be accessed"
+            );
+            alert.show();
+        }
+
     }
 
     /**

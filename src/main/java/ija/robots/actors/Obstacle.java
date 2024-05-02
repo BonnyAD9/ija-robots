@@ -110,6 +110,17 @@ public class Obstacle extends SimObj {
         super.setSelected(val);
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+            "obstacle: %fx%f [%f, %f]",
+            hitbox().width(),
+            hitbox().height(),
+            hitbox().x(),
+            hitbox().y()
+        );
+    }
+
     //=======================================================================//
     //                               PRIVATE                                 //
     //=======================================================================//
