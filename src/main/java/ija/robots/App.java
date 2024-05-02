@@ -25,6 +25,7 @@ public class App extends Application {
     private Room room;
     private FlowPane simMenu;
     private Menu menu;
+    private ReditMenu reditMenu;
 
     public static void main(String[] args) {
         launch(args);
@@ -33,7 +34,8 @@ public class App extends Application {
     public void start(Stage stage) {
         Platform.runLater(() -> {
             simMenu = simMenu();
-            room = new Room(new Rect(0, 0, 800, 600 - simMenu.getHeight()));
+            reditMenu = new ReditMenu();
+            room = new Room(new Rect(0, 0, 800, viewHeight(600)));
 
             room.add(new Obstacle(new Rect(100, 200, 60, 60)));
             room.add(new Robot(new Vec2(200, 100), 20, Math.PI / 2));
@@ -43,6 +45,7 @@ public class App extends Application {
             var menuButton = new Button("menu");
             menuButton.setOnMouseClicked(e -> menu.setVisible(true));
 
+            room.setOnSelect(e -> reditMenu.select(e));
             stage.setOnCloseRequest(e -> room.run(false));
 
             // Robot[] robots = {
@@ -51,7 +54,7 @@ public class App extends Application {
             //     new Robot(new Circle(0.5, 3.5, 0.4), Vec2.unit(0)),
             // };
 
-            var root = new FlowPane(Orientation.VERTICAL, room.getGraphics(), simMenu);
+            var root = new FlowPane(Orientation.VERTICAL, reditMenu.getNode(), room.getGraphics(), simMenu);
 
             var stack = new StackPane();
             StackPane.setMargin(menuButton, new Insets(5));
@@ -68,7 +71,7 @@ public class App extends Application {
                 (observable, oldValue, newValue) -> {
                     var rsize = new Vec2(
                         scene.getWidth(),
-                        scene.getHeight() - simMenu.getHeight()
+                        viewHeight(scene.getHeight())
                     );
                     room.resize(new Rect(0, 0, rsize.width(), rsize.height()));
                     menu.resize(new Vec2(rsize.width(), rsize.height()));
@@ -95,5 +98,9 @@ public class App extends Application {
         res.setAlignment(Pos.CENTER_RIGHT);
         res.setPrefHeight(40);
         return res;
+    }
+
+    private double viewHeight(double height) {
+        return height - simMenu.getHeight() - reditMenu.getHeight();
     }
 }

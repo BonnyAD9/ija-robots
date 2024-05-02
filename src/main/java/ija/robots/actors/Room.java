@@ -111,6 +111,10 @@ public class Room {
         return timer != null;
     }
 
+    public void setOnSelect(SimHandler<SimObj> val) {
+        onSelect = val;
+    }
+
     //=======================================================================//
     //                               PRIVATE                                 //
     //=======================================================================//
