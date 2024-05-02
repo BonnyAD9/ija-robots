@@ -3,7 +3,6 @@ package ija.robots.actors;
 import java.util.function.Consumer;
 
 import java.io.FileWriter;
-import java.io.IOError;
 import java.io.IOException;
 
 import ija.robots.common.Rect;

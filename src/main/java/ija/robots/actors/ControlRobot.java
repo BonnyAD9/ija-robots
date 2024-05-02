@@ -130,7 +130,8 @@ public class ControlRobot extends Robot {
     @Override
     public String toString() {
         return String.format(
-            "control_robot: [%f, %f] { speed: %f, angle: %f, rotation_speed: %f }",
+            "control_robot: [%f, %f] { speed: %f, angle: %f, " +
+            "rotation_speed: %f }",
             hitbox().x(),
             hitbox().y(),
             sspeed,
