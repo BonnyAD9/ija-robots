@@ -102,6 +102,15 @@ public final class Vec2 {
     }
 
     /**
+     * Calculates the cross product of the two vectors
+     * @param other The other vector
+     * @return Cross product of the two vectors
+     */
+    public double cross(Vec2 other) {
+        return x * other.y - y * other.x;
+    }
+
+    /**
      * Creates new vector by rotating this.
      * @param angle Angle to rotate by.
      * @return A new vector.
