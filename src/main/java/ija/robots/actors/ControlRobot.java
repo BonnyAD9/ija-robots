@@ -32,7 +32,7 @@ public class ControlRobot extends Robot {
 
         if (curRotSpeed != 0) {
             var ang = curRotSpeed * delta;
-            super.angle(super.angle() + ang);
+            angle(super.angle() + ang);
         }
 
         super.move(delta, distance);
@@ -89,9 +89,9 @@ public class ControlRobot extends Robot {
      */
     public void left(boolean start) {
         if (start) {
-            curRotSpeed += rotSpeed;
+            curRotSpeed = Math.max(curRotSpeed - rotSpeed, -rotSpeed);
         } else {
-            curRotSpeed -= rotSpeed;
+            curRotSpeed = Math.min(curRotSpeed + rotSpeed, 0.);
         }
     }
 
@@ -101,9 +101,9 @@ public class ControlRobot extends Robot {
      */
     public void right(boolean start) {
         if (start) {
-            curRotSpeed -= rotSpeed;
+            curRotSpeed = Math.min(rotSpeed + curRotSpeed, rotSpeed);
         } else {
-            curRotSpeed += rotSpeed;
+            curRotSpeed = Math.max(curRotSpeed - rotSpeed, 0.);
         }
     }
 }
