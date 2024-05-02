@@ -43,6 +43,7 @@ public class Room {
         run(true);
 
         view.setFocusTraversable(true);
+        view.setOnMousePressed(e -> view.requestFocus());
         view.setOnKeyPressed(e -> keyListener(e, true));
         view.setOnKeyReleased(e -> keyListener(e, false));
     }
