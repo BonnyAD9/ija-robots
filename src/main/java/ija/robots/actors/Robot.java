@@ -19,7 +19,7 @@ public class Robot extends SimObj {
     private Circle shape;
     private Circle eye;
     private Vec2 lastPos = new Vec2(0, 0);
-    private boolean isDragging;
+    private boolean isDragging = false;
 
     private double speed;
     private double angle;
@@ -43,9 +43,9 @@ public class Robot extends SimObj {
         shape.setOnMousePressed(e -> mousePress(e, shape));
         shape.setOnMouseDragged(e -> mouseDrag(e));
         shape.setOnMouseReleased(e -> mouseRelease(e, shape));
-        shape.setOnMouseEntered(e -> shape.setCursor(Cursor.OPEN_HAND));
-        shape.setOnMouseExited(e -> shape.setCursor(Cursor.DEFAULT));
-        shape.setOnMouseMoved(e -> shape.setCursor(Cursor.OPEN_HAND));
+        shape.setOnMouseEntered(e -> mouseCurIfNotDrag(shape, Cursor.OPEN_HAND));
+        shape.setOnMouseExited(e -> mouseCurIfNotDrag(shape, Cursor.NONE));
+        shape.setOnMouseMoved(e -> mouseCurIfNotDrag(shape, Cursor.OPEN_HAND));
 
         eye = new Circle(3);
         eye.setFill(Color.WHITE);
@@ -53,9 +53,9 @@ public class Robot extends SimObj {
         eye.setOnMousePressed(e -> mousePress(e, eye));
         eye.setOnMouseDragged(e -> mouseDrag(e));
         eye.setOnMouseReleased(e -> mouseRelease(e, eye));
-        eye.setOnMouseEntered(e -> eye.setCursor(Cursor.OPEN_HAND));
-        eye.setOnMouseExited(e -> eye.setCursor(Cursor.DEFAULT));
-        eye.setOnMouseMoved(e -> eye.setCursor(Cursor.OPEN_HAND));
+        eye.setOnMouseEntered(e -> mouseCurIfNotDrag(eye, Cursor.OPEN_HAND));
+        eye.setOnMouseExited(e -> mouseCurIfNotDrag(eye, Cursor.NONE));
+        eye.setOnMouseMoved(e -> mouseCurIfNotDrag(eye, Cursor.OPEN_HAND));
 
         this.speed = speed;
         angle(angle);
@@ -233,6 +233,12 @@ public class Robot extends SimObj {
             var delta = newPos.sub(lastPos);
             moveBy(delta);
             lastPos = newPos;
+        }
+    }
+
+    private void mouseCurIfNotDrag(Circle source, Cursor cur) {
+        if (!isDragging()) {
+            source.setCursor(cur);
         }
     }
 }
