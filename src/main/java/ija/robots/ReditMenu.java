@@ -2,12 +2,14 @@ package ija.robots;
 
 import java.util.function.BiConsumer;
 
+import ija.robots.actors.AutoRobot;
 import ija.robots.actors.Robot;
 import ija.robots.actors.SimObj;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -19,9 +21,17 @@ import javafx.scene.layout.Priority;
  * Menu for editing robot/obstacle parameters.
  */
 public class ReditMenu {
+    private class RobotType {
+        static final int DUMMY = 0;
+        static final int AUTO = 1;
+        static final int CONTROL = 2;
+    }
+
     private SimObj obj;
 
     private HBox pane;
+
+    private ComboBox<String> rtype;
 
     private HBox all;
     private HBox robot;
@@ -94,6 +104,7 @@ public class ReditMenu {
 
         speedField.setText(String.format("%.2f", r.speed()));
         angleField.setText(String.format("%.2f", r.angle()));
+        rtype.getSelectionModel().select(getRobotType());
     }
 
     /**
@@ -139,10 +150,16 @@ public class ReditMenu {
     }
 
     private HBox robotPane() {
-        robot = new HBox(5, speed(), angle());
+        robot = new HBox(5, rtype(), speed(), angle());
         robot.setPadding(new Insets(0, 0, 0, 5));
         robot.setAlignment(Pos.CENTER_LEFT);
         return robot;
+    }
+
+    private ComboBox<String> rtype() {
+        rtype = new ComboBox<>();
+        rtype.getItems().addAll("Dummy", "Auto", "Control");
+        return rtype;
     }
 
     private HBox speed() {
@@ -207,5 +224,12 @@ public class ReditMenu {
                 );
             } catch (Exception ex) {}
         });
+    }
+
+    private int getRobotType() {
+        if (obj instanceof AutoRobot) {
+            return RobotType.AUTO;
+        }
+        return RobotType.DUMMY;
     }
 }
