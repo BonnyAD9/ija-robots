@@ -357,12 +357,8 @@ public class Room {
     }
 
     private Vec2 line_intersection(Vec2 p1, Vec2 d1, Vec2 p2, Vec2 d2) {
-        var u = cross(p2.sub(p1), d1) / cross(d1, d2);
+        var u = p2.sub(p1).cross(d1) / d1.cross(d2);
         return p2.add(d2.mul(u));
-    }
-
-    private double cross(Vec2 a, Vec2 b) {
-        return a.x() * b.y() - a.y() * b.x();
     }
 
     private boolean inRange(double val, double start, double end) {
