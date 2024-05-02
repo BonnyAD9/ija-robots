@@ -8,6 +8,7 @@ import ija.robots.SimHandler;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.application.Platform;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
 /**
@@ -40,6 +41,10 @@ public class Room {
         this.bounds = bounds;
         timer = null;
         run(true);
+
+        view.setFocusTraversable(true);
+        view.setOnKeyPressed(e -> keyListener(e, true));
+        view.setOnKeyReleased(e -> keyListener(e, false));
     }
 
     /**
@@ -160,6 +165,27 @@ public class Room {
                 borderCollision(r);
             }
         }
+    }
+
+    private void keyListener(KeyEvent event, boolean start) {
+        if (!isRunning() || !(selected instanceof ControlRobot))
+            return;
+
+        var rob = (ControlRobot)selected;
+        switch (event.getCode()) {
+            case UP:
+                rob.forward(start);
+                break;
+            case RIGHT:
+                rob.right(start);
+                break;
+            case LEFT:
+               rob.left(start);
+                break;
+            default:
+                return;
+        }
+        event.consume();
     }
 
     private void moveRobots(double delta) {

@@ -1,6 +1,7 @@
 package ija.robots;
 
 import ija.robots.actors.AutoRobot;
+import ija.robots.actors.ControlRobot;
 import ija.robots.actors.Obstacle;
 import ija.robots.actors.Robot;
 import ija.robots.actors.Room;
@@ -43,7 +44,7 @@ public class App extends Application {
             room = new Room(new Rect(0, 0, 800, viewHeight(600)));
 
             room.add(new Obstacle(new Rect(100, 200, 60, 60)));
-            room.add(new Robot(new Vec2(200, 100), 20, Math.PI / 2));
+            room.add(new ControlRobot(new Vec2(200, 100), 20, Math.PI / 2));
             room.add(new Robot(new Vec2(201, 200), 0, 0));
             room.add(new AutoRobot(new Vec2(300, 100)));
 
