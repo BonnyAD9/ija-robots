@@ -128,6 +128,7 @@ public class Obstacle extends SimObj {
     }
 
     private void mousePress(MouseEvent event) {
+        shape.toFront();
         setSelected(true);
         if (event.getButton() == MouseButton.PRIMARY) {
             if (state == State.NONE) {

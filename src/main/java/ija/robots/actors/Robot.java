@@ -184,6 +184,7 @@ public class Robot extends SimObj {
     }
 
     private void mousePress(MouseEvent event) {
+        shape.toFront();
         setSelected(true);
         if (event.getButton() == MouseButton.PRIMARY) {
             isDragging = true;
