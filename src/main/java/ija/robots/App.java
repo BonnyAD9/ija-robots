@@ -62,9 +62,16 @@ public class App extends Application {
             var stack = new StackPane();
             StackPane.setMargin(menuButton, new Insets(5));
             stack.setAlignment(Pos.TOP_LEFT);
-            stack.getChildren().addAll(room.getGraphics(), menuButton, menu.getGraphics());
+            stack
+                .getChildren()
+                .addAll(room.getGraphics(), menuButton, menu.getGraphics());
 
-            var root = new FlowPane(Orientation.VERTICAL, reditMenu.getNode(), stack, simMenu);
+            var root = new FlowPane(
+                Orientation.VERTICAL,
+                reditMenu.getNode(),
+                stack,
+                simMenu
+            );
 
             Scene scene = new Scene(root, 800, 600);
 
