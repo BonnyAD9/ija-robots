@@ -61,6 +61,10 @@ public class Robot extends SimObj {
         angle(angle);
     }
 
+    public Robot(Robot r) {
+        this(r.apos(), r.speed(), r.angle());
+    }
+
     /**
      * Gets the bounding box of the hitbox of the robot.
      * @return Bounding box of the hitbox of this.

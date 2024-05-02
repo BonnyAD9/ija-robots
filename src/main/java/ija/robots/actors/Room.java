@@ -153,6 +153,15 @@ public class Room {
         onSelect = val;
     }
 
+    public void changeRobot(Robot o, Robot n) {
+        var select = (SimObj)o == selected;
+        remove(o);
+        add(n);
+        if (select) {
+            n.setSelected(true);
+        }
+    }
+
     //=======================================================================//
     //                               PRIVATE                                 //
     //=======================================================================//

@@ -5,10 +5,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class ControlRobot extends Robot {
-    double sspeed;
-    double rotSpeed = Math.PI / 4;
-    double curSpeed = 0;
-    double curRotSpeed = 0;
+    private double sspeed;
+    private double rotSpeed = Math.PI / 4;
+    private double curSpeed = 0;
+    private double curRotSpeed = 0;
 
     /**
      * Creates new controlled robot
@@ -19,6 +19,17 @@ public class ControlRobot extends Robot {
     public ControlRobot(Vec2 topLeft, double speed, double angle) {
         super(topLeft, speed, angle);
         sspeed = speed;
+    }
+
+    public ControlRobot(Robot r) {
+        super(r);
+        rotSpeed = Math.PI / 4;
+        sspeed = r.speed();
+        if (r instanceof AutoRobot ar) {
+            rotSpeed = ar.rspeed();
+        } else if (r instanceof ControlRobot cr) {
+            rotSpeed = cr.rspeed();
+        }
     }
 
     @Override

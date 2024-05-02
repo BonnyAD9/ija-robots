@@ -49,6 +49,24 @@ public class AutoRobot extends Robot {
         this(topLeft, 20, Math.PI / 2, 20, Math.PI / Math.E, Math.PI / 4);
     }
 
+    public AutoRobot(Robot r) {
+        super(r);
+        edist = 20;
+        erot = Math.PI / Math.E;
+        rspeed = Math.PI / 4;
+        sspeed = r.speed();
+        var shape = getShape();
+        shape.setFill(Color.web("#5555cc"));
+
+        if (r instanceof AutoRobot ar) {
+            edist = ar.edist();
+            erot = ar.erot();
+            rspeed = ar.rspeed();
+        } else if (r instanceof ControlRobot cr) {
+            rspeed = cr.rspeed();
+        }
+    }
+
     @Override
     public double speed() {
         if (rotRem != 0) {

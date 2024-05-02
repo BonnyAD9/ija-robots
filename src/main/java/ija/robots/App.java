@@ -54,6 +54,7 @@ public class App extends Application {
 
             room.setOnSelect(e -> reditMenu.select(e));
             reditMenu.setOnRemove(e -> room.remove(e));
+            reditMenu.setOnChangeRobot((o, n) -> room.changeRobot(o, n));
             stage.setOnCloseRequest(e -> room.run(false));
 
             // Robot[] robots = {

@@ -3,6 +3,7 @@ package ija.robots;
 import java.util.function.BiConsumer;
 
 import ija.robots.actors.AutoRobot;
+import ija.robots.actors.ControlRobot;
 import ija.robots.actors.Robot;
 import ija.robots.actors.SimObj;
 import javafx.geometry.Insets;
@@ -43,6 +44,7 @@ public class ReditMenu {
     private TextField angleField;
 
     private SimHandler<SimObj> onRemove = null;
+    private BiConsumer<Robot, Robot> onChangeRobot = null;
 
     //=======================================================================//
     //                                PUBLIC                                 //
@@ -116,6 +118,10 @@ public class ReditMenu {
         onRemove = val;
     }
 
+    public void setOnChangeRobot(BiConsumer<Robot, Robot> val) {
+        onChangeRobot = val;
+    }
+
     //=======================================================================//
     //                               PRIVATE                                 //
     //=======================================================================//
@@ -159,6 +165,23 @@ public class ReditMenu {
     private ComboBox<String> rtype() {
         rtype = new ComboBox<>();
         rtype.getItems().addAll("Dummy", "Auto", "Control");
+        rtype.getSelectionModel().selectedIndexProperty().addListener(i -> {
+            var idx = rtype.getSelectionModel().getSelectedIndex();
+            if (idx == getRobotType() || onChangeRobot == null || !(obj instanceof Robot r)) {
+                return;
+            }
+            switch (idx) {
+                case RobotType.DUMMY:
+                    onChangeRobot.accept(r, new Robot(r));
+                    break;
+                case RobotType.AUTO:
+                    onChangeRobot.accept(r, new AutoRobot(r));
+                    break;
+                case RobotType.CONTROL:
+                    onChangeRobot.accept(r, new ControlRobot(r));
+                    break;
+            }
+        });
         return rtype;
     }
 
@@ -229,6 +252,9 @@ public class ReditMenu {
     private int getRobotType() {
         if (obj instanceof AutoRobot) {
             return RobotType.AUTO;
+        }
+        if (obj instanceof ControlRobot) {
+            return RobotType.CONTROL;
         }
         return RobotType.DUMMY;
     }
