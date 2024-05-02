@@ -101,6 +101,10 @@ public class Robot extends SimObj {
         return this.speed = speed;
     }
 
+    /**
+     * Gets the center of the robot.
+     * @return Center of the robot.
+     */
     public Vec2 center() {
         return new Vec2(shape.getCenterX(), shape.getCenterY());
     }
@@ -132,6 +136,10 @@ public class Robot extends SimObj {
         return shape;
     }
 
+    /**
+     * Gets the shape of the eye of the robot that can be drawn.
+     * @return Shape of the eye of the robot that can be drawn.
+     */
     public Circle getEye() {
         return eye;
     }
@@ -160,6 +168,10 @@ public class Robot extends SimObj {
         return Vec2.polar(speed, angle);
     }
 
+    /**
+     * The same as vecAngle :)
+     * @return The same as vecAngle :)
+     */
     public Vec2 orientationVec() {
         return new Vec2(Math.cos(angle), Math.sin(angle));
     }

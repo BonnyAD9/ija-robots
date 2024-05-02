@@ -3,6 +3,9 @@ package ija.robots.actors;
 import ija.robots.common.Vec2;
 import javafx.scene.paint.Color;
 
+/**
+ * Robot with basic AI.
+ */
 public class AutoRobot extends Robot {
     private double edist;
     private double erot;
@@ -11,6 +14,15 @@ public class AutoRobot extends Robot {
     private double sspeed;
     private double rotRem = 0;
 
+    /**
+     * Creates new robot with basic AI.
+     * @param topLeft Top left corner of the robot.
+     * @param speed Speed of the robot. (pixels per second)
+     * @param angle Angle the robot is facing. (radians)
+     * @param edist Elide distance. (pixels)
+     * @param erot Elide rotataion. (radians)
+     * @param rspeed Rotation speed. (radians per second)
+     */
     public AutoRobot(
         Vec2 topLeft,
         double speed,
@@ -29,6 +41,10 @@ public class AutoRobot extends Robot {
         shape.setFill(Color.web("#5555cc"));
     }
 
+    /**
+     * Creates new robot with basic AI.
+     * @param topLeft Position of the top left corner of the robot.
+     */
     public AutoRobot(Vec2 topLeft) {
         this(topLeft, 20, Math.PI / 2, 20, Math.PI / Math.E, Math.PI / 4);
     }
@@ -49,26 +65,53 @@ public class AutoRobot extends Robot {
         return super.speed(speed);
     }
 
+    /**
+     * Gets the elide distance.
+     * @return The elide distance. (pixels)
+     */
     public double edist() {
         return edist;
     }
 
+    /**
+     * Sets the elide distance.
+     * @param edist New elide distance (pixels).
+     * @return The new elide distance.
+     */
     public double edist(double edist) {
         return this.edist = edist;
     }
 
+    /**
+     * Gets the elide rotation.
+     * @return Elide rotation. (radians)
+     */
     public double erot() {
         return erot;
     }
 
+    /**
+     * Sets the elide rotation.
+     * @param erot New elide rotation. (radians)
+     * @return The new elide rotation.
+     */
     public double erot(double erot) {
         return this.erot = erot;
     }
 
+    /**
+     * Gets the rotation speed.
+     * @return Rotation speed. (radians per second)
+     */
     public double rspeed() {
         return rspeed;
     }
 
+    /**
+     * Sets the rotation speed.
+     * @param rspeed New rotation speed (radians per second)
+     * @return The new rotation speed.
+     */
     public double rspeed(double rspeed) {
         return this.rspeed = rspeed;
     }
