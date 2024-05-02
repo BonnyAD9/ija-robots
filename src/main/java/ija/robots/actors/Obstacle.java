@@ -3,6 +3,7 @@ package ija.robots.actors;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.scene.Cursor;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -10,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 /**
  * Immovable obstacle represented by a rectangle.
  */
-public class Obstacle {
+public class Obstacle extends SimObj {
     /**
      * Dragging state of the obstacle.
      */
@@ -99,6 +100,16 @@ public class Obstacle {
         return state == State.DRAGGING;
     }
 
+    @Override
+    public void setSelected(boolean val) {
+        if (val) {
+            shape.setStroke(Color.web("#ffff55"));
+        } else {
+            shape.setStroke(Color.WHITE);
+        }
+        super.setSelected(val);
+    }
+
     //=======================================================================//
     //                               PRIVATE                                 //
     //=======================================================================//
@@ -117,9 +128,12 @@ public class Obstacle {
     }
 
     private void mousePress(MouseEvent event) {
-        if (state == State.NONE) {
-            shape.setCursor(Cursor.CLOSED_HAND);
-            state = State.DRAGGING;
+        setSelected(true);
+        if (event.getButton() == MouseButton.PRIMARY) {
+            if (state == State.NONE) {
+                shape.setCursor(Cursor.CLOSED_HAND);
+                state = State.DRAGGING;
+            }
         }
     }
 

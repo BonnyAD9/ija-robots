@@ -192,6 +192,7 @@ class RobotButton {
 
 public class Menu {
     StackPane menu;
+    Pane pane;
     ObstacleButton obstBtn;
     ObstacleButton obstGhost;
     RobotButton robBtn;
@@ -205,7 +206,7 @@ public class Menu {
         bg.setMaxWidth(100);
         bg.setStyle("-fx-background-color: #404040");
 
-        var pane = new Pane();
+        pane = new Pane();
         var paneMid = (rect.height() - 40) / 2;
 
         obstGhost = new ObstacleButton(new Vec2(20, paneMid - 30));
@@ -218,6 +219,7 @@ public class Menu {
             robGhost.getShape(),
             robBtn.getShape()
         );
+        pane.setMaxHeight(rect.height());
 
         menu = new StackPane(bg, pane, btn);
         StackPane.setAlignment(bg, Pos.CENTER_LEFT);
@@ -236,6 +238,7 @@ public class Menu {
         obstGhost.setPos(new Vec2(20, paneMid - 30));
         robBtn.setPos(new Vec2(25, paneMid + 50));
         robGhost.setPos(new Vec2(25, paneMid + 50));
+        pane.setMaxHeight(bounds.height());
     }
 
     public void setVisible(boolean vis) {
