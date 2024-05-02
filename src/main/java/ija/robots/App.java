@@ -59,18 +59,14 @@ public class App extends Application {
             //     new Robot(new Circle(0.5, 3.5, 0.4), Vec2.unit(0)),
             // };
 
-            var root = new FlowPane(Orientation.VERTICAL, reditMenu.getNode(), room.getGraphics(), simMenu);
-
             var stack = new StackPane();
             StackPane.setMargin(menuButton, new Insets(5));
-            StackPane.setMargin(
-                menu.getGraphics(),
-                new Insets(0, 0, 40, 0)
-            );
             stack.setAlignment(Pos.TOP_LEFT);
-            stack.getChildren().addAll(root, menuButton, menu.getGraphics());
+            stack.getChildren().addAll(room.getGraphics(), menuButton, menu.getGraphics());
 
-            Scene scene = new Scene(stack, 800, 600);
+            var root = new FlowPane(Orientation.VERTICAL, reditMenu.getNode(), stack, simMenu);
+
+            Scene scene = new Scene(root, 800, 600);
 
             ChangeListener<Number> resizeListener =
                 (observable, oldValue, newValue) -> {
