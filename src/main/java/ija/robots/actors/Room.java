@@ -81,6 +81,7 @@ public class Room {
         robot.onSelect(o -> select(o));
         robots.add(robot);
         view.getChildren().add(robot.getShape());
+        view.getChildren().add(robot.getEye());
     }
 
     /**
@@ -104,6 +105,7 @@ public class Room {
 
         if (obj instanceof Robot r) {
             view.getChildren().remove(r.getShape());
+            view.getChildren().remove(r.getEye());
             robots.remove(r);
         } else if (obj instanceof Obstacle o) {
             view.getChildren().remove(o.getShape());

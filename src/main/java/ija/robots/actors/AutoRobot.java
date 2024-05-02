@@ -30,7 +30,7 @@ public class AutoRobot extends Robot {
     }
 
     public AutoRobot(Vec2 topLeft) {
-        this(topLeft, 20, Math.PI / 2, 20, Math.PI / Math.E, Math.PI / 2);
+        this(topLeft, 20, Math.PI / 2, 20, Math.PI / Math.E, Math.PI / 4);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class AutoRobot extends Robot {
 
         if (rotRem != 0) {
             var ang = rspeed * delta;
-            ang -= rotRem < 0 ? - ang : ang;
+            ang = rotRem < 0 ? - ang : ang;
             if (Math.abs(rotRem) < Math.abs(ang)) {
                 ang = rotRem;
                 rotRem = 0;

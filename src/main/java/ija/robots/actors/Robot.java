@@ -17,6 +17,7 @@ public class Robot extends SimObj {
     private static final double ADJ = BORDER_THICKNESS / 2;
 
     private Circle shape;
+    private Circle eye;
     private Vec2 lastPos = new Vec2(0, 0);
     private boolean isDragging;
 
@@ -39,14 +40,25 @@ public class Robot extends SimObj {
         shape.setFill(Color.web("#cc55cc"));
         shape.setStroke(Color.WHITE);
         shape.setStrokeWidth(BORDER_THICKNESS);
-        shape.setOnMousePressed(e -> mousePress(e));
+        shape.setOnMousePressed(e -> mousePress(e, shape));
         shape.setOnMouseDragged(e -> mouseDrag(e));
-        shape.setOnMouseReleased(e -> mouseRelease(e));
+        shape.setOnMouseReleased(e -> mouseRelease(e, shape));
         shape.setOnMouseEntered(e -> shape.setCursor(Cursor.OPEN_HAND));
         shape.setOnMouseExited(e -> shape.setCursor(Cursor.DEFAULT));
         shape.setOnMouseMoved(e -> shape.setCursor(Cursor.OPEN_HAND));
+
+        eye = new Circle(3);
+        eye.setFill(Color.WHITE);
+        eye.setStrokeWidth(0);
+        eye.setOnMousePressed(e -> mousePress(e, eye));
+        eye.setOnMouseDragged(e -> mouseDrag(e));
+        eye.setOnMouseReleased(e -> mouseRelease(e, eye));
+        eye.setOnMouseEntered(e -> eye.setCursor(Cursor.OPEN_HAND));
+        eye.setOnMouseExited(e -> eye.setCursor(Cursor.DEFAULT));
+        eye.setOnMouseMoved(e -> eye.setCursor(Cursor.OPEN_HAND));
+
         this.speed = speed;
-        this.angle = angle;
+        angle(angle);
     }
 
     /**
@@ -89,12 +101,19 @@ public class Robot extends SimObj {
         return this.speed = speed;
     }
 
+    public Vec2 center() {
+        return new Vec2(shape.getCenterX(), shape.getCenterY());
+    }
+
     /**
      * Sets the direction that the robot is facing.
      * @param angle The new direction. (radians)
      */
     public void angle(double angle) {
         this.angle = angle;
+        var c = center().add(vecAngle().mul(RADIUS * 2 / 3.));
+        eye.setCenterX(c.x());
+        eye.setCenterY(c.y());
     }
 
     /**
@@ -111,6 +130,10 @@ public class Robot extends SimObj {
      */
     public Circle getShape() {
         return shape;
+    }
+
+    public Circle getEye() {
+        return eye;
     }
 
     /**
@@ -178,6 +201,7 @@ public class Robot extends SimObj {
     private void moveTo(Vec2 pos) {
         shape.setCenterX(pos.x() + RADIUS);
         shape.setCenterY(pos.y() + RADIUS);
+        angle(angle);
     }
 
     private Vec2 apos() {
@@ -187,18 +211,19 @@ public class Robot extends SimObj {
         );
     }
 
-    private void mousePress(MouseEvent event) {
+    private void mousePress(MouseEvent event, Circle source) {
         shape.toFront();
+        eye.toFront();
         setSelected(true);
         if (event.getButton() == MouseButton.PRIMARY) {
             isDragging = true;
-            shape.setCursor(Cursor.CLOSED_HAND);
+            source.setCursor(Cursor.CLOSED_HAND);
             lastPos = new Vec2(event.getX(), event.getY());
         }
     }
 
-    private void mouseRelease(MouseEvent event) {
-        shape.setCursor(Cursor.OPEN_HAND);
+    private void mouseRelease(MouseEvent event, Circle source) {
+        source.setCursor(Cursor.OPEN_HAND);
         isDragging = false;
     }
 
