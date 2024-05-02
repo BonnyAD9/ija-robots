@@ -54,6 +54,7 @@ public class App extends Application {
             var root = new FlowPane(Orientation.VERTICAL, room.getGraphics(), simMenu);
 
             var stack = new StackPane();
+            StackPane.setMargin(menuButton, new Insets(5));
             stack.setAlignment(Pos.TOP_LEFT);
             stack.getChildren().addAll(root, menuButton, menu.getGraphics());
 

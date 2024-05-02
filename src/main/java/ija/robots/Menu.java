@@ -5,6 +5,7 @@ import ija.robots.actors.Robot;
 import ija.robots.actors.Room;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
@@ -177,8 +178,8 @@ public class Menu {
         btn.setOnMouseClicked(e -> menu.setVisible(false));
 
         var bg = new Region();
-        bg.setPrefWidth(100);
-        // bg.setStyle("-fx-background-color: #404040");
+        bg.setMaxWidth(100);
+        bg.setStyle("-fx-background-color: #404040");
 
         var pane = new Pane();
         var paneMid = rect.height() / 2;
@@ -195,6 +196,8 @@ public class Menu {
         );
 
         menu = new StackPane(bg, pane, btn);
+        StackPane.setAlignment(bg, Pos.CENTER_LEFT);
+        StackPane.setMargin(btn, new Insets(5));
         menu.setAlignment(Pos.TOP_LEFT);
         menu.setVisible(false);
     }
