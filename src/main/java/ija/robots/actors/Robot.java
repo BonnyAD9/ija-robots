@@ -137,11 +137,15 @@ public class Robot extends SimObj {
         return Vec2.polar(speed, angle);
     }
 
+    public Vec2 orientationVec() {
+        return new Vec2(Math.cos(angle), Math.sin(angle));
+    }
+
     /**
      * Move the robot.
      * @param delta Time ellapsed in seconds.
      */
-    public void move(double delta) {
+    public void move(double delta, double distance) {
         moveBy(step().mul(delta));
     }
 

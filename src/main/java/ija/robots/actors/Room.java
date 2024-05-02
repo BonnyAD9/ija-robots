@@ -152,6 +152,7 @@ public class Room {
     private void tick(double delta) {
         moveRobots(delta);
 
+        // collisions of robots with the border of the room
         for (var r : robots) {
             if (!r.isDragging()) {
                 borderCollision(r);
@@ -162,7 +163,7 @@ public class Room {
     private void moveRobots(double delta) {
         for (var r : robots) {
             if (!r.isDragging()) {
-                r.move(delta);
+                r.move(delta, obstacleDistance(r));
             }
         }
 
@@ -236,12 +237,12 @@ public class Room {
         // vertical edge
         if (r.vertical().contains(cy)) {
             // left edge of the obstacle
-            if (r.horizontal().contains(r.right())) {
+            if (r.horizontal().contains(c.right())) {
                 rob.hitbox(c.right(r.left()));
                 return;
             }
             // right edge of the obstacle
-            if (r.horizontal().contains(r.left())) {
+            if (r.horizontal().contains(c.left())) {
                 rob.hitbox(c.left(r.right()));
                 return;
             }
@@ -303,5 +304,68 @@ public class Room {
         if (onSelect != null) {
             onSelect.invoke(selected);
         }
+    }
+
+    private double obstacleDistance(Robot rob) {
+        var r = rob.hitbox();
+        var c = (r.topLeft().add(r.botRight())).div(2.0);
+        var d = rob.orientationVec();
+
+        double res = rectDistance(
+            c, d, new Rect(0, 0, bounds.width(), bounds.height())
+        );
+
+        for (var o : obstacles) {
+            if (o.isDragging()) {
+                res = Math.min(res, rectDistance(c, d, o.hitbox()));
+            }
+        }
+
+        return Math.max(
+            0.,
+            Math.min(res - r.width() / 2, Double.POSITIVE_INFINITY)
+        );
+    }
+
+    private double rectDistance(Vec2 p, Vec2 d, Rect r) {
+        return Math.min(
+            Math.min(
+                segmentDistance(p, d, r.topLeft(), r.topRight()),
+                segmentDistance(p, d, r.topRight(), r.botRight())
+            ),
+            Math.min(
+                segmentDistance(p, d, r.botLeft(), r.botRight()),
+                segmentDistance(p, d, r.topLeft(), r.botLeft())
+            )
+        );
+    }
+
+    private double segmentDistance(Vec2 p, Vec2 d, Vec2 a, Vec2 b) {
+        var is = line_intersection(p, d, a, a.sub(b));
+        if (Double.isNaN(is.x())
+            || Double.isNaN(is.y())
+            || (!inRange(is.x(), a.x(), b.x()) && !inRange(is.y(), a.y(), b.y()))
+        ) {
+            return Double.POSITIVE_INFINITY;
+        }
+        var v = is.sub(p);
+        if (d.dot(v) < 0) {
+            return Double.POSITIVE_INFINITY;
+        }
+
+        return Math.sqrt(v.x() * v.x() + v.y() * v.y());
+    }
+
+    private Vec2 line_intersection(Vec2 p1, Vec2 d1, Vec2 p2, Vec2 d2) {
+        var u = cross(p2.sub(p1), d1) / cross(d1, d2);
+        return p2.add(d2.mul(u));
+    }
+
+    private double cross(Vec2 a, Vec2 b) {
+        return a.x() * b.y() - a.y() * b.x();
+    }
+
+    private boolean inRange(double val, double start, double end) {
+        return val > start && val < end;
     }
 }
