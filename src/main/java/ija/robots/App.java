@@ -11,12 +11,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -26,6 +24,7 @@ import javafx.stage.Stage;
 public class App extends Application {
     private Room room;
     private FlowPane simMenu;
+    private Menu menu;
 
     public static void main(String[] args) {
         launch(args);
@@ -40,6 +39,10 @@ public class App extends Application {
             room.add(new Robot(new Vec2(200, 100), 20, Math.PI / 2));
             room.add(new Robot(new Vec2(201, 200), 0, 0));
 
+            menu = new Menu(room, new Rect(0, 0, 800, 600 - 40));
+            var menuButton = new Button("menu");
+            menuButton.setOnMouseClicked(e -> menu.setVisible(true));
+
             stage.setOnCloseRequest(e -> room.run(false));
 
             // Robot[] robots = {
@@ -50,7 +53,11 @@ public class App extends Application {
 
             var root = new FlowPane(Orientation.VERTICAL, room.getGraphics(), simMenu);
 
-            Scene scene = new Scene(root, 800, 600);
+            var stack = new StackPane();
+            stack.setAlignment(Pos.TOP_LEFT);
+            stack.getChildren().addAll(root, menuButton, menu.getGraphics());
+
+            Scene scene = new Scene(stack, 800, 600);
 
             ChangeListener<Number> resizeListener =
                 (observable, oldValue, newValue) -> {
