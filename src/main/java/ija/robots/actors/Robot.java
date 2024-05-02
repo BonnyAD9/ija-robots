@@ -3,6 +3,7 @@ package ija.robots.actors;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.scene.Cursor;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -10,7 +11,7 @@ import javafx.scene.shape.Circle;
 /**
  * Represents robot that can move. It is the base class for all other robots.
  */
-public class Robot {
+public class Robot extends SimObj {
     private static final double RADIUS = 25;
     private static final double BORDER_THICKNESS = 6;
     private static final double ADJ = BORDER_THICKNESS / 2;
@@ -144,6 +145,16 @@ public class Robot {
         return isDragging;
     }
 
+    @Override
+    public void setSelected(boolean val) {
+        if (val) {
+            shape.setStroke(Color.web("#ffff55"));
+        } else {
+            shape.setStroke(Color.WHITE);
+        }
+        super.setSelected(val);
+    }
+
     //=======================================================================//
     //                               PRIVATE                                 //
     //=======================================================================//
@@ -165,9 +176,12 @@ public class Robot {
     }
 
     private void mousePress(MouseEvent event) {
-        isDragging = true;
-        shape.setCursor(Cursor.CLOSED_HAND);
-        lastPos = new Vec2(event.getX(), event.getY());
+        setSelected(true);
+        if (event.getButton() == MouseButton.PRIMARY) {
+            isDragging = true;
+            shape.setCursor(Cursor.CLOSED_HAND);
+            lastPos = new Vec2(event.getX(), event.getY());
+        }
     }
 
     private void mouseRelease(MouseEvent event) {
@@ -176,9 +190,11 @@ public class Robot {
     }
 
     private void mouseDrag(MouseEvent event) {
-        var newPos = new Vec2(event.getX(), event.getY());
-        var delta = newPos.sub(lastPos);
-        moveBy(delta);
-        lastPos = newPos;
+        if (isDragging) {
+            var newPos = new Vec2(event.getX(), event.getY());
+            var delta = newPos.sub(lastPos);
+            moveBy(delta);
+            lastPos = newPos;
+        }
     }
 }

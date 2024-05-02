@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ija.robots.SimHandler;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.application.Platform;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 /**
  * Room with robots and obstacles.
@@ -22,6 +20,9 @@ public class Room {
     private Rect bounds;
     private ArrayList<Robot> robots = new ArrayList<>();
     private ArrayList<Obstacle> obstacles = new ArrayList<>();
+
+    private SimHandler<SimObj> onSelect = null;
+    private SimObj selected = null;
 
     //=======================================================================//
     //                                PUBLIC                                 //
@@ -77,6 +78,7 @@ public class Room {
      * @param robot robot to add to the room.
      */
     public void add(Robot robot) {
+        robot.onSelect(o -> select(o));
         robots.add(robot);
         view.getChildren().add(robot.getShape());
     }
@@ -86,6 +88,7 @@ public class Room {
      * @param obstacle Obstacle to add to the room.
      */
     public void add(Obstacle obstacle) {
+        obstacle.onSelect(o -> select(o));
         obstacles.add(obstacle);
         view.getChildren().add(obstacle.getShape());
     }
@@ -252,5 +255,19 @@ public class Room {
         dir = dirLen == 0 ? new Vec2(0, 0) : dir.mul(over / (2 * dirLen));
         r1.hitbox(c1.moveBy(dir.negate()));
         r2.hitbox(c2.moveBy(dir));
+    }
+
+    private void select(SimObj obj) {
+        if (selected != null && selected != obj) {
+            var evt = selected.onSelect();
+            selected.onSelect(null);
+            selected.setSelected(false);
+            selected.onSelect(evt);
+        }
+
+        selected = obj;
+        if (onSelect != null) {
+            onSelect.invoke(selected);
+        }
     }
 }
