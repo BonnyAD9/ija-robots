@@ -93,6 +93,10 @@ public class Room {
         view.getChildren().add(obstacle.getShape());
     }
 
+    /**
+     * Removes the given robot/obstacle from the room.
+     * @param obj Robot/Obstacle to remove.
+     */
     public void remove(SimObj obj) {
         if (obj == selected) {
             select(null);
@@ -115,16 +119,28 @@ public class Room {
         return view;
     }
 
+    /**
+     * Resizes the room.
+     * @param bounds The new bounds of the room.
+     */
     public void resize(Rect bounds) {
         this.bounds = bounds;
         view.setPrefWidth(bounds.width());
         view.setPrefHeight(bounds.height());
     }
 
+    /**
+     * Checks whether the simulation is running.
+     * @return true if the simulation is running, otherwise false.
+     */
     public boolean isRunning() {
         return timer != null;
     }
 
+    /**
+     * Sets the onSelect event that is triggered when object is selected.
+     * @param val The event handler,
+     */
     public void setOnSelect(SimHandler<SimObj> val) {
         onSelect = val;
     }

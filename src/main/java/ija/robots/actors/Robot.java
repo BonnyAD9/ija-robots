@@ -97,6 +97,10 @@ public class Robot extends SimObj {
         this.angle = angle;
     }
 
+    /**
+     * Gets the direction that the robot is facing.
+     * @return Direction that the robot is facing.
+     */
     public double angle() {
         return angle;
     }

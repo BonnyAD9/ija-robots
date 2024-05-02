@@ -15,6 +15,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
+/**
+ * Menu for editing robot/obstacle parameters.
+ */
 public class ReditMenu {
     private SimObj obj;
 
@@ -31,6 +34,13 @@ public class ReditMenu {
 
     private SimHandler<SimObj> onRemove = null;
 
+    //=======================================================================//
+    //                                PUBLIC                                 //
+    //=======================================================================//
+
+    /**
+     * Creates new menu for editing robot/obstacle parameters.
+     */
     public ReditMenu() {
         var all = allPane();
         var robot = robotPane();
@@ -41,14 +51,26 @@ public class ReditMenu {
         pane.setVisible(false);
     }
 
+    /**
+     * Gets the menu node.
+     * @return The menu node.
+     */
     public Node getNode() {
         return pane;
     }
 
+    /**
+     * Gets the height of the menu node.
+     * @return Height of the menu node.
+     */
     public double getHeight() {
         return pane.getHeight();
     }
 
+    /**
+     * Chooses object which parameters will be edited.
+     * @param obj Object to edit.
+     */
     public void select(SimObj obj) {
         if (this.obj == obj) {
             return;
@@ -74,9 +96,18 @@ public class ReditMenu {
         angleField.setText(String.format("%.2f", r.angle()));
     }
 
+    /**
+     * Sets the onRemove event handler that is invoked when the object should
+     * be removed.
+     * @param val Object that should be removed.
+     */
     public void setOnRemove(SimHandler<SimObj> val) {
         onRemove = val;
     }
+
+    //=======================================================================//
+    //                               PRIVATE                                 //
+    //=======================================================================//
 
     private HBox allPane() {
         var deselect = deselectBtn();

@@ -27,6 +27,10 @@ public class App extends Application {
     private Menu menu;
     private ReditMenu reditMenu;
 
+    //=======================================================================//
+    //                                PUBLIC                                 //
+    //=======================================================================//
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -85,6 +89,10 @@ public class App extends Application {
             stage.show();
         });
     }
+
+    //=======================================================================//
+    //                               PRIVATE                                 //
+    //=======================================================================//
 
     private FlowPane simMenu() {
         var but = new Button("pause");
