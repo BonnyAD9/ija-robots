@@ -311,7 +311,7 @@ public class Room {
     private double obstacleDistance(Robot rob) {
         var r = rob.hitbox();
         var c = (r.topLeft().add(r.botRight())).div(2.0);
-        var d = rob.orientationVec();
+        var d = rob.vecAngle();
 
         double res = rectDistance(
             c, d, new Rect(0, 0, bounds.width(), bounds.height())

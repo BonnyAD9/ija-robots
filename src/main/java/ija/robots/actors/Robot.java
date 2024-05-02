@@ -169,14 +169,6 @@ public class Robot extends SimObj {
     }
 
     /**
-     * The same as vecAngle :)
-     * @return The same as vecAngle :)
-     */
-    public Vec2 orientationVec() {
-        return new Vec2(Math.cos(angle), Math.sin(angle));
-    }
-
-    /**
      * Move the robot.
      * @param delta Time ellapsed in seconds.
      */
