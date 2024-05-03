@@ -1,13 +1,17 @@
 package ija.robots;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+import ija.robots.actors.AutoRobot;
+import ija.robots.actors.ControlRobot;
 import ija.robots.actors.Robot;
 import ija.robots.actors.SimObj;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -19,20 +23,33 @@ import javafx.scene.layout.Priority;
  * Menu for editing robot/obstacle parameters.
  */
 public class ReditMenu {
+    private class RobotType {
+        static final int DUMMY = 0;
+        static final int AUTO = 1;
+        static final int CONTROL = 2;
+    }
+
     private SimObj obj;
 
     private HBox pane;
 
+
     private HBox all;
     private HBox robot;
 
-    private HBox speedPane;
-    private TextField speedField;
+    private ComboBox<String> rtype;
+    private TextField speed;
+    private TextField angle;
 
-    private HBox anglePane;
-    private TextField angleField;
+    private HBox crobot;
+    private TextField rspeed;
 
-    private SimHandler<SimObj> onRemove = null;
+    private HBox arobot;
+    private TextField edist;
+    private TextField rdist;
+
+    private Consumer<SimObj> onRemove = null;
+    private BiConsumer<Robot, Robot> onChangeRobot = null;
 
     //=======================================================================//
     //                                PUBLIC                                 //
@@ -75,6 +92,10 @@ public class ReditMenu {
         if (this.obj == obj) {
             return;
         }
+        if (this.obj instanceof Robot r) {
+            r.setOnAngleChange(null);
+        }
+
         this.obj = obj;
 
         if (obj == null) {
@@ -90,10 +111,36 @@ public class ReditMenu {
             return;
         }
 
-        robot.setVisible(true);
+        r.setOnAngleChange(a -> {
+            if (!angle.isFocused()) {
+                angle.setText(
+                    String.format("%.2f", reduceDegrees(-a / Math.PI * 180))
+                );
+            }
+        });
 
-        speedField.setText(String.format("%.2f", r.speed()));
-        angleField.setText(String.format("%.2f", r.angle()));
+        robot.setVisible(true);
+        crobot.setVisible(false);
+        arobot.setVisible(false);
+
+        rtype.getSelectionModel().select(getRobotType());
+        speed.setText(String.format("%.2f", r.speed()));
+        angle.setText(
+            String.format("%.2f", reduceDegrees(r.angle() / Math.PI * 180))
+        );
+
+        if (r instanceof ControlRobot cr) {
+            crobot.setVisible(true);
+
+            rspeed.setText(String.format("%.2f", cr.rspeed() / Math.PI * 180));
+        } else if (r instanceof AutoRobot ar) {
+            crobot.setVisible(true);
+            arobot.setVisible(true);
+
+            rspeed.setText(String.format("%.2f", ar.rspeed() / Math.PI * 180));
+            edist.setText(String.format("%.2f", ar.edist()));
+            rdist.setText(String.format("%.2f", -ar.erot() / Math.PI * 180));
+        }
     }
 
     /**
@@ -101,8 +148,17 @@ public class ReditMenu {
      * be removed.
      * @param val Object that should be removed.
      */
-    public void setOnRemove(SimHandler<SimObj> val) {
+    public void setOnRemove(Consumer<SimObj> val) {
         onRemove = val;
+    }
+
+    /**
+     * Sets the event handler for the onChangeRobot event that triggers when
+     * one robot should be replaced by another.
+     * @param val The event handler.
+     */
+    public void setOnChangeRobot(BiConsumer<Robot, Robot> val) {
+        onChangeRobot = val;
     }
 
     //=======================================================================//
@@ -110,9 +166,7 @@ public class ReditMenu {
     //=======================================================================//
 
     private HBox allPane() {
-        var deselect = deselectBtn();
-        var remove = removeBtn();
-        all = new HBox(5, deselect, remove);
+        all = new HBox(5, deselectBtn(), removeBtn());
         all.setPadding(new Insets(0, 5, 0, 0));
         all.setAlignment(Pos.CENTER_RIGHT);
         return all;
@@ -132,48 +186,122 @@ public class ReditMenu {
         var remove = new Button("remove");
         remove.setOnMouseClicked(e -> {
             if (onRemove != null) {
-                onRemove.invoke(obj);
+                onRemove.accept(obj);
             }
         });
         return remove;
     }
 
     private HBox robotPane() {
-        robot = new HBox(5, speed(), angle());
+        robot = new HBox(
+            5,
+            rtype(),
+            new Label("speed:"),
+            speed(),
+            new Label("angle:"),
+            angle(),
+            crobot(),
+            arobot()
+        );
         robot.setPadding(new Insets(0, 0, 0, 5));
         robot.setAlignment(Pos.CENTER_LEFT);
         return robot;
     }
 
-    private HBox speed() {
-        speedPane = new HBox(5, new Label("speed:"), speedField());
-        speedPane.setAlignment(Pos.CENTER_LEFT);
-        return speedPane;
+    private ComboBox<String> rtype() {
+        rtype = new ComboBox<>();
+        rtype.getItems().addAll("Dummy", "Auto", "Control");
+        rtype.getSelectionModel().selectedIndexProperty().addListener(i -> {
+            var idx = rtype.getSelectionModel().getSelectedIndex();
+            if (idx == getRobotType() || onChangeRobot == null || !(obj instanceof Robot r)) {
+                return;
+            }
+            switch (idx) {
+                case RobotType.DUMMY:
+                    onChangeRobot.accept(r, new Robot(r));
+                    break;
+                case RobotType.AUTO:
+                    onChangeRobot.accept(r, new AutoRobot(r));
+                    break;
+                case RobotType.CONTROL:
+                    onChangeRobot.accept(r, new ControlRobot(r));
+                    break;
+            }
+        });
+        return rtype;
     }
 
-    private TextField speedField() {
-        speedField = new TextField();
-        speedField.setPrefWidth(60);
-        speedField.setTextFormatter(numberFormatter(0, Double.MAX_VALUE));
-        setNumber(speedField, (s, r) -> r.speed(s), Robot.class);
-        return speedField;
+    private TextField speed() {
+        return speed = makeNumField(
+            0,
+            Double.MAX_VALUE,
+            (s, r) -> r.speed(s),
+            Robot.class
+        );
     }
 
-    private HBox angle() {
-        anglePane = new HBox(5, new Label("angle:"), angleField());
-        anglePane.setAlignment(Pos.CENTER_LEFT);
-        return anglePane;
+    private TextField angle() {
+        return angle = makeNumField(
+            -360,
+            360,
+            (a, r) -> r.angle(-a / 180 * Math.PI),
+            Robot.class
+        );
     }
 
-    private TextField angleField() {
-        angleField = new TextField();
-        angleField.setPrefWidth(60);
-        angleField.setTextFormatter(numberFormatter(-360, 360));
-        setNumber(angleField, (a, r) -> r.angle(a), Robot.class);
-        return angleField;
+    private HBox crobot() {
+        crobot = new HBox(5, new Label("r. speed: "), rspeed());
+        crobot.setAlignment(Pos.CENTER_LEFT);
+        return crobot;
     }
 
-    private TextFormatter<?> numberFormatter(double min, double max) {
+    private TextField rspeed() {
+        return rspeed = makeNumField(
+            0,
+            Double.MAX_VALUE,
+            (rs, r) -> {
+                rs = rs / 180 * Math.PI;
+                if (r instanceof ControlRobot cr) {
+                    cr.rspeed(rs);
+                } else if (r instanceof AutoRobot ar) {
+                    ar.rspeed(rs);
+                }
+            },
+            Robot.class
+        );
+    }
+
+    private HBox arobot() {
+        arobot = new HBox(
+            5,
+            new Label("d. dist:"),
+            edist(),
+            new Label("r. dist:"),
+            rdist()
+        );
+        arobot.setAlignment(Pos.CENTER_LEFT);
+        return arobot;
+    }
+
+    private TextField edist() {
+        return edist = makeNumField(
+            0,
+            Double.MAX_VALUE,
+            (ed, r) -> r.edist(ed),
+            AutoRobot.class
+        );
+    }
+
+    private TextField rdist() {
+        return rdist = makeNumField(
+            -360,
+            360,
+            (rd, r) -> r.erot(-rd / 180 * Math.PI),
+            AutoRobot.class
+        );
+    }
+
+    private static TextFormatter<?> numberFormatter(double min, double max) {
         return new TextFormatter<>(c -> {
             var txt = c.getControlNewText();
             if (txt.isEmpty() || min < 0 && txt.equals("-")) {
@@ -207,5 +335,41 @@ public class ReditMenu {
                 );
             } catch (Exception ex) {}
         });
+    }
+
+    private int getRobotType() {
+        if (obj instanceof AutoRobot) {
+            return RobotType.AUTO;
+        }
+        if (obj instanceof ControlRobot) {
+            return RobotType.CONTROL;
+        }
+        return RobotType.DUMMY;
+    }
+
+    private static double reduceDegrees(double angle) {
+        var sign = angle > 0 ? 1 : -1;
+        angle = Math.abs(angle);
+        var rnum = (int)angle % 360;
+        angle = sign * (rnum + (angle - (int)angle));
+        if (angle < -180) {
+            angle += 360;
+        } else if (angle > 180) {
+            angle -= 360;
+        }
+        return angle;
+    }
+
+    private <T extends SimObj> TextField makeNumField(
+        double min,
+        double max,
+        BiConsumer<Double, T> onSet,
+        Class<T> clazz
+    ) {
+        var fld = new TextField();
+        fld.setPrefWidth(60);
+        fld.setTextFormatter(numberFormatter(min, max));
+        setNumber(fld, onSet, clazz);
+        return fld;
     }
 }

@@ -1,5 +1,7 @@
 package ija.robots.actors;
 
+import java.util.function.Consumer;
+
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.scene.Cursor;
@@ -20,6 +22,8 @@ public class Robot extends SimObj {
     private Circle eye;
     private Vec2 lastPos = new Vec2(0, 0);
     private boolean isDragging = false;
+
+    private Consumer<Double> onAngleChange;
 
     private double speed;
     private double angle;
@@ -59,6 +63,14 @@ public class Robot extends SimObj {
 
         this.speed = speed;
         angle(angle);
+    }
+
+    /**
+     * Creates new robot and takes the parameters from existing robot.
+     * @param r Robot to take the parameters from.
+     */
+    public Robot(Robot r) {
+        this(r.apos(), r.speed(), r.angle());
     }
 
     /**
@@ -118,6 +130,9 @@ public class Robot extends SimObj {
         var c = center().add(vecAngle().mul(RADIUS * 2 / 3.));
         eye.setCenterX(c.x());
         eye.setCenterY(c.y());
+        if (onAngleChange != null) {
+            onAngleChange.accept(angle);
+        }
     }
 
     /**
@@ -192,6 +207,15 @@ public class Robot extends SimObj {
             shape.setStroke(Color.WHITE);
         }
         super.setSelected(val);
+    }
+
+    /**
+     * Sets the event handler for the event onAngleChange which triggers when
+     * the angle of the robot changes.
+     * @param val The event handler.
+     */
+    public void setOnAngleChange(Consumer<Double> val) {
+        onAngleChange = val;
     }
 
     //=======================================================================//

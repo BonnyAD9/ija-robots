@@ -3,8 +3,8 @@ package ija.robots.actors;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
 
-import ija.robots.SimHandler;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.application.Platform;
@@ -22,7 +22,7 @@ public class Room {
     private ArrayList<Robot> robots = new ArrayList<>();
     private ArrayList<Obstacle> obstacles = new ArrayList<>();
 
-    private SimHandler<SimObj> onSelect = null;
+    private Consumer<SimObj> onSelect = null;
     private SimObj selected = null;
 
     //=======================================================================//
@@ -149,8 +149,22 @@ public class Room {
      * Sets the onSelect event that is triggered when object is selected.
      * @param val The event handler,
      */
-    public void setOnSelect(SimHandler<SimObj> val) {
+    public void setOnSelect(Consumer<SimObj> val) {
         onSelect = val;
+    }
+
+    /**
+     * Replaces one robot with another.
+     * @param o Robot to replace.
+     * @param n New robot to replace with.
+     */
+    public void changeRobot(Robot o, Robot n) {
+        var select = (SimObj)o == selected;
+        remove(o);
+        add(n);
+        if (select) {
+            n.setSelected(true);
+        }
     }
 
     //=======================================================================//
@@ -331,7 +345,7 @@ public class Room {
 
         selected = obj;
         if (onSelect != null) {
-            onSelect.invoke(selected);
+            onSelect.accept(selected);
         }
     }
 

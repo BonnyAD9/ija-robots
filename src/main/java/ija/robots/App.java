@@ -33,27 +33,35 @@ public class App extends Application {
     //                                PUBLIC                                 //
     //=======================================================================//
 
+    /**
+     * The man entry point of the application.
+     * @param args Command line arguments for the application.
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
     public void start(Stage stage) {
         Platform.runLater(() -> {
+            final int WIDTH = 900;
+            final int HEIGHT = 600;
+
             simMenu = simMenu();
             reditMenu = new ReditMenu();
-            room = new Room(new Rect(0, 0, 800, viewHeight(600)));
+            room = new Room(new Rect(0, 0, WIDTH, viewHeight(HEIGHT)));
 
             room.add(new Obstacle(new Rect(100, 200, 60, 60)));
             room.add(new ControlRobot(new Vec2(200, 100), 20, Math.PI / 2));
             room.add(new Robot(new Vec2(201, 200), 0, 0));
             room.add(new AutoRobot(new Vec2(300, 100)));
 
-            menu = new Menu(room, new Rect(0, 0, 800, 600 - 40));
+            menu = new Menu(room, new Rect(0, 0, WIDTH, viewHeight(HEIGHT)));
             var menuButton = new Button("menu");
             menuButton.setOnMouseClicked(e -> menu.setVisible(true));
 
             room.setOnSelect(e -> reditMenu.select(e));
             reditMenu.setOnRemove(e -> room.remove(e));
+            reditMenu.setOnChangeRobot((o, n) -> room.changeRobot(o, n));
             stage.setOnCloseRequest(e -> room.run(false));
 
             // Robot[] robots = {
@@ -76,7 +84,7 @@ public class App extends Application {
                 simMenu
             );
 
-            Scene scene = new Scene(root, 800, 600);
+            Scene scene = new Scene(root, WIDTH, HEIGHT);
 
             ChangeListener<Number> resizeListener =
                 (observable, oldValue, newValue) -> {

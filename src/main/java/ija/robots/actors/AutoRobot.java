@@ -29,7 +29,7 @@ public class AutoRobot extends Robot {
         double angle,
         double edist,
         double erot,
-         double rspeed
+        double rspeed
     ) {
         super(topLeft, speed, angle);
         this.edist = edist;
@@ -47,6 +47,29 @@ public class AutoRobot extends Robot {
      */
     public AutoRobot(Vec2 topLeft) {
         this(topLeft, 20, Math.PI / 2, 20, Math.PI / Math.E, Math.PI / 4);
+    }
+
+    /**
+     * Creates new robot with simple AI and takes the parameters from other
+     * robtot;
+     * @param r Robot to take the parameters from.
+     */
+    public AutoRobot(Robot r) {
+        super(r);
+        edist = 20;
+        erot = Math.PI / Math.E;
+        rspeed = Math.PI / 4;
+        sspeed = r.speed();
+        var shape = getShape();
+        shape.setFill(Color.web("#5555cc"));
+
+        if (r instanceof AutoRobot ar) {
+            edist = ar.edist();
+            erot = ar.erot();
+            rspeed = ar.rspeed();
+        } else if (r instanceof ControlRobot cr) {
+            rspeed = cr.rspeed();
+        }
     }
 
     @Override
