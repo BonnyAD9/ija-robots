@@ -95,7 +95,7 @@ public class Room {
         } catch (IOException e) {
             Alert alert = new Alert(
                 AlertType.ERROR,
-                "File cannot be accessed"
+                e.getMessage()
             );
             alert.show();
         }

@@ -54,7 +54,7 @@ public class App extends Application {
             room = new Room(new Rect(0, 0, WIDTH, viewHeight(HEIGHT)));
 
             room.add(new Obstacle(new Rect(100, 200, 60, 60)));
-            room.add(new ControlRobot(new Vec2(200, 100), 20, Math.PI / 2));
+            room.add(new ControlRobot(new Vec2(200, 100)));
             room.add(new Robot(new Vec2(201, 200), 0, 0));
             room.add(new AutoRobot(new Vec2(300, 100)));
 
@@ -118,6 +118,10 @@ public class App extends Application {
         save.setOnMouseClicked(e -> room.save(path.getText()));
 
         var load = new Button("load");
+        load.setOnMouseClicked(e -> {
+            var loader = new Loader(path.getText());
+            loader.load(room);
+        });
 
         var but = new Button("pause");
         but.setPrefWidth(60);
