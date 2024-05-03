@@ -7,6 +7,7 @@ import ija.robots.actors.Robot;
 import ija.robots.actors.Room;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
+import ija.robots.load.Loader;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

@@ -198,6 +198,31 @@ public class Room {
         }
     }
 
+    /**
+     * Clears current items from room and adds new
+     * @param obstacles new obstacles
+     * @param robots new robots
+     */
+    public void clear(ArrayList<Obstacle> obstacles, ArrayList<Robot> robots) {
+        for (var obst : this.obstacles) {
+            view.getChildren().remove(obst.getShape());
+        }
+        for (var rob : this.robots) {
+            view.getChildren().remove(rob.getShape());
+            view.getChildren().remove(rob.getEye());
+        }
+
+        this.obstacles.clear();
+        this.robots.clear();
+
+        for (var obst : obstacles) {
+            add(obst);
+        }
+        for (var rob : robots) {
+            add(rob);
+        }
+    }
+
     //=======================================================================//
     //                               PRIVATE                                 //
     //=======================================================================//
