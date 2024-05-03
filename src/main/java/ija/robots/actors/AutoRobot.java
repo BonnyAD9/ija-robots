@@ -49,6 +49,11 @@ public class AutoRobot extends Robot {
         this(topLeft, 20, Math.PI / 2, 20, Math.PI / Math.E, Math.PI / 4);
     }
 
+    /**
+     * Creates new robot with simple AI and takes the parameters from other
+     * robtot;
+     * @param r Robot to take the parameters from.
+     */
     public AutoRobot(Robot r) {
         super(r);
         edist = 20;

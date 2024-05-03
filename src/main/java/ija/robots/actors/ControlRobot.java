@@ -21,6 +21,11 @@ public class ControlRobot extends Robot {
         sspeed = speed;
     }
 
+    /**
+     * Creates a new controlled robot and takes the parameters from existing
+     * robot.
+     * @param r Robot to take the parameters from.
+     */
     public ControlRobot(Robot r) {
         super(r);
         rotSpeed = Math.PI / 4;

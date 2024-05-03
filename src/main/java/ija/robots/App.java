@@ -33,6 +33,10 @@ public class App extends Application {
     //                                PUBLIC                                 //
     //=======================================================================//
 
+    /**
+     * The man entry point of the application.
+     * @param args Command line arguments for the application.
+     */
     public static void main(String[] args) {
         launch(args);
     }

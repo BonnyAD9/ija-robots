@@ -1,6 +1,7 @@
 package ija.robots;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import ija.robots.actors.AutoRobot;
 import ija.robots.actors.ControlRobot;
@@ -47,7 +48,7 @@ public class ReditMenu {
     private TextField edist;
     private TextField rdist;
 
-    private SimHandler<SimObj> onRemove = null;
+    private Consumer<SimObj> onRemove = null;
     private BiConsumer<Robot, Robot> onChangeRobot = null;
 
     //=======================================================================//
@@ -147,10 +148,15 @@ public class ReditMenu {
      * be removed.
      * @param val Object that should be removed.
      */
-    public void setOnRemove(SimHandler<SimObj> val) {
+    public void setOnRemove(Consumer<SimObj> val) {
         onRemove = val;
     }
 
+    /**
+     * Sets the event handler for the onChangeRobot event that triggers when
+     * one robot should be replaced by another.
+     * @param val The event handler.
+     */
     public void setOnChangeRobot(BiConsumer<Robot, Robot> val) {
         onChangeRobot = val;
     }
@@ -180,7 +186,7 @@ public class ReditMenu {
         var remove = new Button("remove");
         remove.setOnMouseClicked(e -> {
             if (onRemove != null) {
-                onRemove.invoke(obj);
+                onRemove.accept(obj);
             }
         });
         return remove;

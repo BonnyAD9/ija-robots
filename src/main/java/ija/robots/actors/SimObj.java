@@ -1,12 +1,12 @@
 package ija.robots.actors;
 
-import ija.robots.SimHandler;
+import java.util.function.Consumer;
 
 /**
  * Represents object that can be placed into a room.
  */
 public class SimObj {
-    private SimHandler<SimObj> onSelect;
+    private Consumer<SimObj> onSelect;
 
     /**
      * Select/deselect the object.
@@ -17,9 +17,9 @@ public class SimObj {
             return;
         }
         if (val) {
-            onSelect.invoke(this);
+            onSelect.accept(this);
         } else {
-            onSelect.invoke(null);
+            onSelect.accept(null);
         }
     }
 
@@ -28,7 +28,7 @@ public class SimObj {
      * selected/deselected.
      * @param val The event handler.
      */
-    public void onSelect(SimHandler<SimObj> val) {
+    public void onSelect(Consumer<SimObj> val) {
         onSelect = val;
     }
 
@@ -37,7 +37,7 @@ public class SimObj {
      * selected/deselected.
      * @return The event handler.
      */
-    public SimHandler<SimObj> onSelect() {
+    public Consumer<SimObj> onSelect() {
         return onSelect;
     }
 }
