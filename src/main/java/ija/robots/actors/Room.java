@@ -103,6 +103,11 @@ public class Room {
             alert.show();
         }
 
+        Alert alert = new Alert(
+            AlertType.CONFIRMATION,
+            "The room was successfully saved"
+        );
+        alert.show();
     }
 
     /**
