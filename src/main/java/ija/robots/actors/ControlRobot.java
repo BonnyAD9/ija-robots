@@ -50,22 +50,6 @@ public class ControlRobot extends Robot {
         }
     }
 
-    /**
-     * Creates a new controlled robot and takes the parameters from existing
-     * robot.
-     * @param r Robot to take the parameters from.
-     */
-    public ControlRobot(Robot r) {
-        super(r);
-        rotSpeed = Math.PI / 4;
-        sspeed = r.speed();
-        if (r instanceof AutoRobot ar) {
-            rotSpeed = ar.rspeed();
-        } else if (r instanceof ControlRobot cr) {
-            rotSpeed = cr.rspeed();
-        }
-    }
-
     @Override
     public void move(double delta, double distance) {
         if (distance == 0) {
