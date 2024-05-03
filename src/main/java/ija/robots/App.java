@@ -7,6 +7,7 @@ import ija.robots.actors.Robot;
 import ija.robots.actors.Room;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
+import ija.robots.load.Loader;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -15,7 +16,10 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -25,7 +29,7 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
     private Room room;
-    private FlowPane simMenu;
+    private HBox simMenu;
     private Menu menu;
     private ReditMenu reditMenu;
 
@@ -46,12 +50,12 @@ public class App extends Application {
             final int WIDTH = 900;
             final int HEIGHT = 600;
 
-            simMenu = simMenu();
+            simMenu = simMenu(stage);
             reditMenu = new ReditMenu();
             room = new Room(new Rect(0, 0, WIDTH, viewHeight(HEIGHT)));
 
             room.add(new Obstacle(new Rect(100, 200, 60, 60)));
-            room.add(new ControlRobot(new Vec2(200, 100), 20, Math.PI / 2));
+            room.add(new ControlRobot(new Vec2(200, 100)));
             room.add(new Robot(new Vec2(201, 200), 0, 0));
             room.add(new AutoRobot(new Vec2(300, 100)));
 
@@ -88,6 +92,7 @@ public class App extends Application {
 
             ChangeListener<Number> resizeListener =
                 (observable, oldValue, newValue) -> {
+                    System.out.println(newValue + " == " + stage.getWidth());
                     var rsize = new Vec2(
                         scene.getWidth(),
                         viewHeight(scene.getHeight())
@@ -108,7 +113,18 @@ public class App extends Application {
     //                               PRIVATE                                 //
     //=======================================================================//
 
-    private FlowPane simMenu() {
+    private HBox simMenu(Stage stage) {
+        var path = new TextField();
+
+        var save = new Button("save");
+        save.setOnMouseClicked(e -> room.save(stage, path.getText()));
+
+        var load = new Button("load");
+        load.setOnMouseClicked(e -> {
+            var loader = new Loader(path.getText());
+            loader.load(stage, room);
+        });
+
         var but = new Button("pause");
         but.setPrefWidth(60);
         but.setOnMouseClicked(e -> {
@@ -116,9 +132,11 @@ public class App extends Application {
             but.setText(run ? "pause" : "play");
             room.run(run);
         });
-        var res = new FlowPane(5, 5, but);
-        res.setPadding(new Insets(5));
+
+        var res = new HBox(5, path, save, load, but);
+        HBox.setHgrow(path, Priority.ALWAYS);
         res.setAlignment(Pos.CENTER_RIGHT);
+        res.setPadding(new Insets(5));
         res.setPrefHeight(40);
         return res;
     }

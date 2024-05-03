@@ -1,5 +1,7 @@
 package ija.robots.actors;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,8 +10,11 @@ import java.util.function.Consumer;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * Room with robots and obstacles.
@@ -69,6 +74,35 @@ public class Room {
             timer.cancel();
             timer = null;
         }
+    }
+
+    /**
+     * Saves room to the file
+     * @param stage window
+     * @param filename name of the file to save into
+     */
+    public void save(Stage stage, String filename) {
+        try {
+            FileWriter writer = new FileWriter(filename);
+            writer.write(
+                "room: " + stage.getWidth() + "x" +
+                (stage.getHeight() - 80) + "\n"
+            );
+            for (var obst : obstacles) {
+                writer.write(obst + "\n");
+            }
+            for (var rob : robots) {
+                writer.write(rob + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            Alert alert = new Alert(
+                AlertType.ERROR,
+                e.getMessage()
+            );
+            alert.show();
+        }
+
     }
 
     /**
@@ -164,6 +198,31 @@ public class Room {
         add(n);
         if (select) {
             n.setSelected(true);
+        }
+    }
+
+    /**
+     * Clears current items from room and adds new
+     * @param obstacles new obstacles
+     * @param robots new robots
+     */
+    public void clear(ArrayList<Obstacle> obstacles, ArrayList<Robot> robots) {
+        for (var obst : this.obstacles) {
+            view.getChildren().remove(obst.getShape());
+        }
+        for (var rob : this.robots) {
+            view.getChildren().remove(rob.getShape());
+            view.getChildren().remove(rob.getEye());
+        }
+
+        this.obstacles.clear();
+        this.robots.clear();
+
+        for (var obst : obstacles) {
+            add(obst);
+        }
+        for (var rob : robots) {
+            add(rob);
         }
     }
 
