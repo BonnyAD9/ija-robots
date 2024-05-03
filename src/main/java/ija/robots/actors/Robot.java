@@ -1,5 +1,6 @@
 package ija.robots.actors;
 
+import ija.robots.SimHandler;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.scene.Cursor;
@@ -20,6 +21,8 @@ public class Robot extends SimObj {
     private Circle eye;
     private Vec2 lastPos = new Vec2(0, 0);
     private boolean isDragging = false;
+
+    private SimHandler<Double> onAngleChange;
 
     private double speed;
     private double angle;
@@ -122,6 +125,9 @@ public class Robot extends SimObj {
         var c = center().add(vecAngle().mul(RADIUS * 2 / 3.));
         eye.setCenterX(c.x());
         eye.setCenterY(c.y());
+        if (onAngleChange != null) {
+            onAngleChange.invoke(angle);
+        }
     }
 
     /**
@@ -196,6 +202,10 @@ public class Robot extends SimObj {
             shape.setStroke(Color.WHITE);
         }
         super.setSelected(val);
+    }
+
+    public void setOnAngleChange(SimHandler<Double> val) {
+        onAngleChange = val;
     }
 
     //=======================================================================//

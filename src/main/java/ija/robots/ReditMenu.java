@@ -91,6 +91,10 @@ public class ReditMenu {
         if (this.obj == obj) {
             return;
         }
+        if (this.obj instanceof Robot r) {
+            r.setOnAngleChange(null);
+        }
+
         this.obj = obj;
 
         if (obj == null) {
@@ -106,13 +110,23 @@ public class ReditMenu {
             return;
         }
 
+        r.setOnAngleChange(a -> {
+            if (!angle.isFocused()) {
+                angle.setText(
+                    String.format("%.2f", reduceDegrees(-a / Math.PI * 180))
+                );
+            }
+        });
+
         robot.setVisible(true);
         crobot.setVisible(false);
         arobot.setVisible(false);
 
         rtype.getSelectionModel().select(getRobotType());
         speed.setText(String.format("%.2f", r.speed()));
-        angle.setText(String.format("%.2f", -r.angle() / Math.PI * 180));
+        angle.setText(
+            String.format("%.2f", reduceDegrees(r.angle() / Math.PI * 180))
+        );
 
         if (r instanceof ControlRobot cr) {
             crobot.setVisible(true);
@@ -330,5 +344,18 @@ public class ReditMenu {
             return RobotType.CONTROL;
         }
         return RobotType.DUMMY;
+    }
+
+    private static double reduceDegrees(double angle) {
+        var sign = angle > 0 ? 1 : -1;
+        angle = Math.abs(angle);
+        var rnum = (int)angle % 360;
+        angle = sign * (rnum + (angle - (int)angle));
+        if (angle < -180) {
+            angle += 360;
+        } else if (angle > 180) {
+            angle -= 360;
+        }
+        return angle;
     }
 }
