@@ -109,6 +109,7 @@ public class LoaderLex {
         if (!Character.isDigit(nextChar()))
             throw new Exception("Unexpected character '-' in file");
 
+        res += cur;
         return readNum();
     }
 

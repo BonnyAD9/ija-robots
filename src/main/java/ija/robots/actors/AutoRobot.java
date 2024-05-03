@@ -172,10 +172,10 @@ public class AutoRobot extends Robot {
             hitbox().x(),
             hitbox().y(),
             sspeed,
-            angle(),
-            rspeed,
+            angle() / Math.PI * 180,
+            rspeed / Math.PI * 180,
             edist,
-            erot
+            erot / Math.PI * 180
         );
     }
 }

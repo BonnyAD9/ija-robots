@@ -92,7 +92,6 @@ public class App extends Application {
 
             ChangeListener<Number> resizeListener =
                 (observable, oldValue, newValue) -> {
-                    System.out.println(newValue + " == " + stage.getWidth());
                     var rsize = new Vec2(
                         scene.getWidth(),
                         viewHeight(scene.getHeight())
