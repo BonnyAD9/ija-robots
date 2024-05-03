@@ -29,7 +29,7 @@ public class AutoRobot extends Robot {
         double angle,
         double edist,
         double erot,
-         double rspeed
+        double rspeed
     ) {
         super(topLeft, speed, angle);
         this.edist = edist;
