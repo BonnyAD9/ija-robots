@@ -144,7 +144,7 @@ public class ControlRobot extends Robot {
             hitbox().x(),
             hitbox().y(),
             sspeed,
-            angle() / Math.PI * 180,
+            -angle() / Math.PI * 180,
             rotSpeed / Math.PI * 180
         );
     }

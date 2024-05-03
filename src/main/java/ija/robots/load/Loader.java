@@ -153,7 +153,7 @@ public class Loader {
             }
         }
 
-        var rob = new Robot(pos, speed, angle * Math.PI / 180);
+        var rob = new Robot(pos, speed, -angle * Math.PI / 180);
         rob.hitbox(new Rect(pos.x(), pos.y(), 0, 0));
         return rob;
     }
@@ -213,7 +213,7 @@ public class Loader {
 
         var rad = Math.PI / 180;
         var rob = new AutoRobot(
-            pos, speed, angle * rad, el, el_r * rad, r * rad
+            pos, speed, -angle * rad, el, el_r * rad, r * rad
         );
         rob.hitbox(new Rect(pos.x(), pos.y(), 0, 0));
         return rob;
@@ -266,7 +266,7 @@ public class Loader {
         }
 
         var rad = Math.PI / 180;
-        var rob = new ControlRobot(pos, speed, angle * rad, r * rad);
+        var rob = new ControlRobot(pos, speed, -angle * rad, r * rad);
         rob.hitbox(new Rect(pos.x(), pos.y(), 0, 0));
         return rob;
     }

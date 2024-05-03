@@ -225,7 +225,7 @@ public class Robot extends SimObj {
             hitbox().x(),
             hitbox().y(),
             speed,
-            angle() / Math.PI * 180
+            -angle() / Math.PI * 180
         );
     }
 
