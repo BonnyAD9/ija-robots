@@ -1,5 +1,6 @@
 package ija.robots;
 
+import java.util.ResourceBundle.Control;
 import java.util.function.BiConsumer;
 
 import ija.robots.actors.AutoRobot;
@@ -32,16 +33,16 @@ public class ReditMenu {
 
     private HBox pane;
 
-    private ComboBox<String> rtype;
 
     private HBox all;
     private HBox robot;
 
-    private HBox speedPane;
-    private TextField speedField;
+    private ComboBox<String> rtype;
+    private TextField speed;
+    private TextField angle;
 
-    private HBox anglePane;
-    private TextField angleField;
+    private HBox crobot;
+    private TextField rspeed;
 
     private SimHandler<SimObj> onRemove = null;
     private BiConsumer<Robot, Robot> onChangeRobot = null;
@@ -103,10 +104,21 @@ public class ReditMenu {
         }
 
         robot.setVisible(true);
+        crobot.setVisible(false);
 
-        speedField.setText(String.format("%.2f", r.speed()));
-        angleField.setText(String.format("%.2f", r.angle()));
         rtype.getSelectionModel().select(getRobotType());
+        speed.setText(String.format("%.2f", r.speed()));
+        angle.setText(String.format("%.2f", -r.angle() / Math.PI * 180));
+
+        if (r instanceof ControlRobot cr) {
+            crobot.setVisible(true);
+
+            rspeed.setText(String.format("%.2f", cr.rspeed() / Math.PI * 180));
+        } else if (r instanceof AutoRobot ar) {
+            crobot.setVisible(true);
+
+            rspeed.setText(String.format("%.2f", ar.rspeed() / Math.PI * 180));
+        }
     }
 
     /**
@@ -156,7 +168,15 @@ public class ReditMenu {
     }
 
     private HBox robotPane() {
-        robot = new HBox(5, rtype(), speed(), angle());
+        robot = new HBox(
+            5,
+            rtype(),
+            new Label("speed:"),
+            speed(),
+            new Label("angle:"),
+            angle(),
+            crobot()
+        );
         robot.setPadding(new Insets(0, 0, 0, 5));
         robot.setAlignment(Pos.CENTER_LEFT);
         return robot;
@@ -185,32 +205,45 @@ public class ReditMenu {
         return rtype;
     }
 
-    private HBox speed() {
-        speedPane = new HBox(5, new Label("speed:"), speedField());
-        speedPane.setAlignment(Pos.CENTER_LEFT);
-        return speedPane;
+    private TextField speed() {
+        speed = new TextField();
+        speed.setPrefWidth(60);
+        speed.setTextFormatter(numberFormatter(0, Double.MAX_VALUE));
+        setNumber(speed, (s, r) -> r.speed(s), Robot.class);
+        return speed;
     }
 
-    private TextField speedField() {
-        speedField = new TextField();
-        speedField.setPrefWidth(60);
-        speedField.setTextFormatter(numberFormatter(0, Double.MAX_VALUE));
-        setNumber(speedField, (s, r) -> r.speed(s), Robot.class);
-        return speedField;
+    private TextField angle() {
+        angle = new TextField();
+        angle.setPrefWidth(60);
+        angle.setTextFormatter(numberFormatter(-360, 360));
+        setNumber(angle, (a, r) -> r.angle(-a / 180 * Math.PI), Robot.class);
+        return angle;
     }
 
-    private HBox angle() {
-        anglePane = new HBox(5, new Label("angle:"), angleField());
-        anglePane.setAlignment(Pos.CENTER_LEFT);
-        return anglePane;
+    private HBox crobot() {
+        crobot = new HBox(5, new Label("r. speed: "), rspeed());
+        crobot.setAlignment(Pos.CENTER_LEFT);
+        return crobot;
     }
 
-    private TextField angleField() {
-        angleField = new TextField();
-        angleField.setPrefWidth(60);
-        angleField.setTextFormatter(numberFormatter(-360, 360));
-        setNumber(angleField, (a, r) -> r.angle(a), Robot.class);
-        return angleField;
+    private TextField rspeed() {
+        rspeed = new TextField();
+        rspeed.setPrefWidth(60);
+        rspeed.setTextFormatter(numberFormatter(0, Double.MAX_VALUE));
+        setNumber(
+            rspeed,
+            (rs, r) -> {
+                rs = rs / 180 * Math.PI;
+                if (r instanceof ControlRobot cr) {
+                    cr.rspeed(rs);
+                } else if (r instanceof AutoRobot ar) {
+                    ar.rspeed(rs);
+                }
+            },
+            Robot.class
+        );
+        return rspeed;
     }
 
     private TextFormatter<?> numberFormatter(double min, double max) {
