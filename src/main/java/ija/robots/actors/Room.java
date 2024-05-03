@@ -415,7 +415,7 @@ public class Room {
 
     private double obstacleDistance(Robot rob) {
         var r = rob.hitbox();
-        var c = (r.topLeft().add(r.botRight())).div(2.0);
+        var c = r.topLeft().add(r.botRight()).div(2.0);
         var d = rob.vecAngle();
 
         double res = rectDistance(
@@ -423,7 +423,7 @@ public class Room {
         );
 
         for (var o : obstacles) {
-            if (o.isDragging()) {
+            if (!o.isDragging()) {
                 res = Math.min(res, rectDistance(c, d, o.hitbox()));
             }
         }
@@ -448,7 +448,7 @@ public class Room {
     }
 
     private double segmentDistance(Vec2 p, Vec2 d, Vec2 a, Vec2 b) {
-        var is = line_intersection(p, d, a, a.sub(b));
+        var is = lineIntersection(p, d, a, a.sub(b));
         if (Double.isNaN(is.x())
             || Double.isNaN(is.y())
             || (!inRange(is.x(), a.x(), b.x()) && !inRange(is.y(), a.y(), b.y()))
@@ -463,7 +463,7 @@ public class Room {
         return Math.sqrt(v.x() * v.x() + v.y() * v.y());
     }
 
-    private Vec2 line_intersection(Vec2 p1, Vec2 d1, Vec2 p2, Vec2 d2) {
+    private Vec2 lineIntersection(Vec2 p1, Vec2 d1, Vec2 p2, Vec2 d2) {
         var u = p2.sub(p1).cross(d1) / d1.cross(d2);
         return p2.add(d2.mul(u));
     }
