@@ -13,6 +13,7 @@ import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
 
 public class Loader {
     private String filename;
@@ -22,7 +23,7 @@ public class Loader {
         this.filename = filename;
     }
 
-    public void load(Room room) {
+    public void load(Stage stage, Room room) {
         var obstacles = new ArrayList<Obstacle>();
         var robots = new ArrayList<Robot>();
 
@@ -41,6 +42,9 @@ public class Loader {
                         if (cur != Token.Number)
                             throw new Exception("Room expects size");
                         var size = readSize(lexer);
+                        stage.setWidth(size.width());
+                        stage.setHeight(size.height() + 80);
+
                         cur = lexer.next();
                         break;
                     case "obstacle":

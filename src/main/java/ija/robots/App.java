@@ -50,7 +50,7 @@ public class App extends Application {
             final int WIDTH = 900;
             final int HEIGHT = 600;
 
-            simMenu = simMenu();
+            simMenu = simMenu(stage);
             reditMenu = new ReditMenu();
             room = new Room(new Rect(0, 0, WIDTH, viewHeight(HEIGHT)));
 
@@ -112,7 +112,7 @@ public class App extends Application {
     //                               PRIVATE                                 //
     //=======================================================================//
 
-    private HBox simMenu() {
+    private HBox simMenu(Stage stage) {
         var path = new TextField();
 
         var save = new Button("save");
@@ -121,7 +121,7 @@ public class App extends Application {
         var load = new Button("load");
         load.setOnMouseClicked(e -> {
             var loader = new Loader(path.getText());
-            loader.load(room);
+            loader.load(stage, room);
         });
 
         var but = new Button("pause");
