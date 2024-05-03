@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * Room with robots and obstacles.
@@ -77,13 +78,15 @@ public class Room {
 
     /**
      * Saves room to the file
+     * @param stage window
      * @param filename name of the file to save into
      */
-    public void save(String filename) {
+    public void save(Stage stage, String filename) {
         try {
             FileWriter writer = new FileWriter(filename);
             writer.write(
-                "room: " + bounds.width() + "x" + bounds.height() + "\n"
+                "room: " + stage.getWidth() + "x" +
+                (stage.getHeight() - 80) + "\n"
             );
             for (var obst : obstacles) {
                 writer.write(obst + "\n");

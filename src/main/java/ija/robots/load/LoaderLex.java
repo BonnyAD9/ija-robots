@@ -2,6 +2,9 @@ package ija.robots.load;
 
 import java.util.Scanner;
 
+/**
+ * Class for tokenizing saved room file
+ */
 public class LoaderLex {
     private String res = "";
     private char cur;

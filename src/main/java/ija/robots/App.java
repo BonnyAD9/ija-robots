@@ -92,6 +92,7 @@ public class App extends Application {
 
             ChangeListener<Number> resizeListener =
                 (observable, oldValue, newValue) -> {
+                    System.out.println(newValue + " == " + stage.getWidth());
                     var rsize = new Vec2(
                         scene.getWidth(),
                         viewHeight(scene.getHeight())
@@ -116,7 +117,7 @@ public class App extends Application {
         var path = new TextField();
 
         var save = new Button("save");
-        save.setOnMouseClicked(e -> room.save(path.getText()));
+        save.setOnMouseClicked(e -> room.save(stage, path.getText()));
 
         var load = new Button("load");
         load.setOnMouseClicked(e -> {

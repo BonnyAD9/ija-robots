@@ -15,14 +15,26 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
+/**
+ * Class for loading saved room from file
+ */
 public class Loader {
     private String filename;
     private Token cur;
 
+    /**
+     * Creates new loader
+     * @param filename file to read from
+     */
     public Loader(String filename) {
         this.filename = filename;
     }
 
+    /**
+     * Loads room from the file
+     * @param stage window
+     * @param room room to load obstacles and robots into
+     */
     public void load(Stage stage, Room room) {
         var obstacles = new ArrayList<Obstacle>();
         var robots = new ArrayList<Robot>();
@@ -76,7 +88,7 @@ public class Loader {
         room.clear(obstacles, robots);
     }
 
-    Obstacle loadObstacle(LoaderLex lexer) throws Exception {
+    private Obstacle loadObstacle(LoaderLex lexer) throws Exception {
         Vec2 pos = new Vec2(0, 0), size = new Vec2(0, 0);
         boolean spos = false, ssize = false;
 

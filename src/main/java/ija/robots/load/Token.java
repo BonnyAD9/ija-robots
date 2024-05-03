@@ -1,5 +1,8 @@
 package ija.robots.load;
 
+/**
+ * Token types enum used for loading room
+ */
 public enum Token {
     Ident,
     Number,
