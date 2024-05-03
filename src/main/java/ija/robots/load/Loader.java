@@ -137,7 +137,7 @@ public class Loader {
             }
         }
 
-        var rob = new Robot(pos, angle, speed);
+        var rob = new Robot(pos, speed, angle);
         rob.hitbox(new Rect(pos.x(), pos.y(), 0, 0));
         return rob;
     }
@@ -195,7 +195,7 @@ public class Loader {
             }
         }
 
-        var rob = new AutoRobot(pos, angle, speed, el, el_r, r);
+        var rob = new AutoRobot(pos, speed, angle, el, el_r, r);
         rob.hitbox(new Rect(pos.x(), pos.y(), 0, 0));
         return rob;
     }
