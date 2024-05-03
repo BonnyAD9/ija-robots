@@ -160,9 +160,7 @@ public class ReditMenu {
     //=======================================================================//
 
     private HBox allPane() {
-        var deselect = deselectBtn();
-        var remove = removeBtn();
-        all = new HBox(5, deselect, remove);
+        all = new HBox(5, deselectBtn(), removeBtn());
         all.setPadding(new Insets(0, 5, 0, 0));
         all.setAlignment(Pos.CENTER_RIGHT);
         return all;
@@ -228,19 +226,21 @@ public class ReditMenu {
     }
 
     private TextField speed() {
-        speed = new TextField();
-        speed.setPrefWidth(60);
-        speed.setTextFormatter(numberFormatter(0, Double.MAX_VALUE));
-        setNumber(speed, (s, r) -> r.speed(s), Robot.class);
-        return speed;
+        return speed = makeNumField(
+            0,
+            Double.MAX_VALUE,
+            (s, r) -> r.speed(s),
+            Robot.class
+        );
     }
 
     private TextField angle() {
-        angle = new TextField();
-        angle.setPrefWidth(60);
-        angle.setTextFormatter(numberFormatter(-360, 360));
-        setNumber(angle, (a, r) -> r.angle(-a / 180 * Math.PI), Robot.class);
-        return angle;
+        return angle = makeNumField(
+            -360,
+            360,
+            (a, r) -> r.angle(-a / 180 * Math.PI),
+            Robot.class
+        );
     }
 
     private HBox crobot() {
@@ -250,11 +250,9 @@ public class ReditMenu {
     }
 
     private TextField rspeed() {
-        rspeed = new TextField();
-        rspeed.setPrefWidth(60);
-        rspeed.setTextFormatter(numberFormatter(0, Double.MAX_VALUE));
-        setNumber(
-            rspeed,
+        return rspeed = makeNumField(
+            0,
+            Double.MAX_VALUE,
             (rs, r) -> {
                 rs = rs / 180 * Math.PI;
                 if (r instanceof ControlRobot cr) {
@@ -265,7 +263,6 @@ public class ReditMenu {
             },
             Robot.class
         );
-        return rspeed;
     }
 
     private HBox arobot() {
@@ -281,26 +278,24 @@ public class ReditMenu {
     }
 
     private TextField edist() {
-        edist = new TextField();
-        edist.setPrefWidth(60);
-        edist.setTextFormatter(numberFormatter(0, Double.MAX_VALUE));
-        setNumber(edist, (ed, r) -> r.edist(ed), AutoRobot.class);
-        return edist;
+        return edist = makeNumField(
+            0,
+            Double.MAX_VALUE,
+            (ed, r) -> r.edist(ed),
+            AutoRobot.class
+        );
     }
 
     private TextField rdist() {
-        rdist = new TextField();
-        rdist.setPrefWidth(60);
-        rdist.setTextFormatter(numberFormatter(-360, 360));
-        setNumber(
-            rdist,
+        return rdist = makeNumField(
+            -360,
+            360,
             (rd, r) -> r.erot(-rd / 180 * Math.PI),
             AutoRobot.class
         );
-        return rdist;
     }
 
-    private TextFormatter<?> numberFormatter(double min, double max) {
+    private static TextFormatter<?> numberFormatter(double min, double max) {
         return new TextFormatter<>(c -> {
             var txt = c.getControlNewText();
             if (txt.isEmpty() || min < 0 && txt.equals("-")) {
@@ -357,5 +352,18 @@ public class ReditMenu {
             angle -= 360;
         }
         return angle;
+    }
+
+    private <T extends SimObj> TextField makeNumField(
+        double min,
+        double max,
+        BiConsumer<Double, T> onSet,
+        Class<T> clazz
+    ) {
+        var fld = new TextField();
+        fld.setPrefWidth(60);
+        fld.setTextFormatter(numberFormatter(min, max));
+        setNumber(fld, onSet, clazz);
+        return fld;
     }
 }
