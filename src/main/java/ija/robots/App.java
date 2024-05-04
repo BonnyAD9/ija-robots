@@ -1,5 +1,7 @@
 package ija.robots;
 
+import java.util.logging.Logger;
+
 import ija.robots.actors.AutoRobot;
 import ija.robots.actors.ControlRobot;
 import ija.robots.actors.Obstacle;
@@ -33,6 +35,8 @@ public class App extends Application {
     private Menu menu;
     private ReditMenu reditMenu;
 
+    private Logger log = Logger.getLogger("App");
+
     //=======================================================================//
     //                                PUBLIC                                 //
     //=======================================================================//
@@ -47,6 +51,7 @@ public class App extends Application {
 
     public void start(Stage stage) {
         Platform.runLater(() -> {
+            log.info("Starting app.");
             final int WIDTH = 900;
             final int HEIGHT = 600;
 
@@ -113,6 +118,7 @@ public class App extends Application {
     //=======================================================================//
 
     private HBox simMenu(Stage stage) {
+        log.info("Creating sim menu.");
         var path = new TextField();
 
         var save = new Button("save");
@@ -128,6 +134,7 @@ public class App extends Application {
         but.setPrefWidth(60);
         but.setOnMouseClicked(e -> {
             var run = !room.isRunning();
+            log.info((run ? "Pausing" : "Playing") + " the simulation.");
             but.setText(run ? "pause" : "play");
             room.run(run);
         });

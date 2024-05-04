@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
@@ -30,6 +31,8 @@ public class Room {
     private Consumer<SimObj> onSelect = null;
     private SimObj selected = null;
 
+    private Logger log = Logger.getLogger("Room");
+
     //=======================================================================//
     //                                PUBLIC                                 //
     //=======================================================================//
@@ -39,6 +42,7 @@ public class Room {
      * @param bounds Area in the room that the robots move in.
      */
     public Room(Rect bounds) {
+        log.info("Creating new room.");
         view = new Pane();
         view.setPrefWidth(bounds.width());
         view.setPrefHeight(bounds.height());
@@ -60,6 +64,7 @@ public class Room {
      */
     public void run(boolean play) {
         if (play && timer == null) {
+            log.info("Playing the simulation.");
             timer = new Timer();
             timer.schedule(
                 new TimerTask() {
@@ -71,8 +76,11 @@ public class Room {
                 10
             );
         } else if (!play && timer != null) {
+            log.info("Pausing the simulation.");
             timer.cancel();
             timer = null;
+        } else {
+            log.info("Simulation was already playing/paused");
         }
     }
 
@@ -82,6 +90,7 @@ public class Room {
      * @param filename name of the file to save into
      */
     public void save(Stage stage, String filename) {
+        log.info("Saving the room to file '" + filename + "'");
         try {
             FileWriter writer = new FileWriter(filename);
             writer.write(
@@ -96,11 +105,13 @@ public class Room {
             }
             writer.close();
         } catch (IOException e) {
+            log.severe("Failed to save room: " + e.getMessage());
             Alert alert = new Alert(
                 AlertType.ERROR,
                 e.getMessage()
             );
             alert.show();
+            return;
         }
 
         Alert alert = new Alert(
@@ -123,6 +134,7 @@ public class Room {
      * @param robot robot to add to the room.
      */
     public void add(Robot robot) {
+        log.info("Adding robot: " + robot);
         robot.onSelect(o -> select(o));
         robots.add(robot);
         view.getChildren().add(robot.getShape());
@@ -134,6 +146,7 @@ public class Room {
      * @param obstacle Obstacle to add to the room.
      */
     public void add(Obstacle obstacle) {
+        log.info("Adding obstacle: " + obstacle);
         obstacle.onSelect(o -> select(o));
         obstacles.add(obstacle);
         view.getChildren().add(obstacle.getShape());
@@ -144,6 +157,8 @@ public class Room {
      * @param obj Robot/Obstacle to remove.
      */
     public void remove(SimObj obj) {
+        log.info("Removing object: " + obj);
+
         if (obj == selected) {
             select(null);
         }
@@ -198,6 +213,9 @@ public class Room {
      * @param n New robot to replace with.
      */
     public void changeRobot(Robot o, Robot n) {
+        log.info("Changing robot:");
+        log.info("    from: " + o);
+        log.info("    to:   " + n);
         var select = (SimObj)o == selected;
         remove(o);
         add(n);
@@ -212,6 +230,18 @@ public class Room {
      * @param robots new robots
      */
     public void clear(ArrayList<Obstacle> obstacles, ArrayList<Robot> robots) {
+        log.info(
+            "Replacing "
+                + this.robots.size()
+                + " robots and "
+                + this.obstacles.size()
+                + " obstacles for "
+                + robots.size()
+                + " robots and "
+                + obstacles.size()
+                + " obstacles."
+        );
+
         for (var obst : this.obstacles) {
             view.getChildren().remove(obst.getShape());
         }
@@ -400,7 +430,9 @@ public class Room {
     }
 
     private void select(SimObj obj) {
+        log.info("Selecting new object: " + obj);
         if (selected != null && selected != obj) {
+            log.info("Deselecting old object: " + selected);
             var evt = selected.onSelect();
             selected.onSelect(null);
             selected.setSelected(false);

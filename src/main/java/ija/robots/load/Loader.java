@@ -3,6 +3,7 @@ package ija.robots.load;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import ija.robots.actors.AutoRobot;
 import ija.robots.actors.ControlRobot;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 public class Loader {
     private String filename;
     private Token cur;
+    private Logger log = Logger.getLogger("Loader");
 
     /**
      * Creates new loader
@@ -80,6 +82,7 @@ public class Loader {
             }
             scan.close();
         } catch (Exception e) {
+            log.severe("Failed to load room: " + e.getMessage());
             Alert alert = new Alert(AlertType.ERROR, e.getMessage());
             alert.show();
             return;

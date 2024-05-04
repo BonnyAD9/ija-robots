@@ -1,5 +1,7 @@
 package ija.robots;
 
+import java.util.logging.Logger;
+
 import ija.robots.actors.Obstacle;
 import ija.robots.actors.Robot;
 import ija.robots.actors.Room;
@@ -25,6 +27,8 @@ class ObstacleButton {
     Room room;
     Rectangle shape;
     Vec2 pos, lastPos;
+
+    private Logger log = Logger.getLogger("Menu");
 
     /**
      * Creates new menu obstacle button
@@ -86,6 +90,7 @@ class ObstacleButton {
     }
 
     private void mouseRelease(MouseEvent event) {
+        log.info("Adding new obstacle.");
         room.add(new Obstacle(new Rect(shape.getX(), shape.getY(), 60, 60)));
         menu.setVisible(false);
         shape.setX(pos.x());
@@ -111,6 +116,8 @@ class RobotButton {
     Room room;
     Circle shape;
     Vec2 pos, lastPos;
+
+    private Logger log = Logger.getLogger("Menu");
 
     /**
      * Creates new menu robot button
@@ -172,6 +179,7 @@ class RobotButton {
     }
 
     private void mouseRelease(MouseEvent event) {
+        log.info("Adding new robot.");
         var loc = new Vec2(shape.getCenterX() - 25, shape.getCenterY() - 25);
         room.add(new Robot(loc, 20, Math.PI / 2));
         menu.setVisible(false);

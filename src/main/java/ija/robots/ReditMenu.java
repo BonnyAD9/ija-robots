@@ -2,6 +2,7 @@ package ija.robots;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import ija.robots.actors.AutoRobot;
 import ija.robots.actors.ControlRobot;
@@ -48,6 +49,8 @@ public class ReditMenu {
     private TextField edist;
     private TextField rdist;
 
+    private Logger log = Logger.getLogger("ReditMenu");
+
     private Consumer<SimObj> onRemove = null;
     private BiConsumer<Robot, Robot> onChangeRobot = null;
 
@@ -66,6 +69,8 @@ public class ReditMenu {
         pane = new HBox(robot, all);
         pane.setPrefHeight(40);
         pane.setVisible(false);
+
+        log.info("Craete redit menu.");
     }
 
     /**
@@ -90,8 +95,11 @@ public class ReditMenu {
      */
     public void select(SimObj obj) {
         if (this.obj == obj) {
+            log.info("Selecting the same object: " + obj);
             return;
         }
+        log.info("new selection: " + obj);
+
         if (this.obj instanceof Robot r) {
             r.setOnAngleChange(null);
         }
@@ -175,6 +183,7 @@ public class ReditMenu {
     private Button deselectBtn() {
         var deselect = new Button("deselect");
         deselect.setOnMouseClicked(e -> {
+            log.info("Deselecting: " + obj);
             if (obj != null) {
                 obj.setSelected(false);
             }
@@ -185,6 +194,7 @@ public class ReditMenu {
     private Button removeBtn() {
         var remove = new Button("remove");
         remove.setOnMouseClicked(e -> {
+            log.info("Removing: " + obj);
             if (onRemove != null) {
                 onRemove.accept(obj);
             }
@@ -214,16 +224,20 @@ public class ReditMenu {
         rtype.getSelectionModel().selectedIndexProperty().addListener(i -> {
             var idx = rtype.getSelectionModel().getSelectedIndex();
             if (idx == getRobotType() || onChangeRobot == null || !(obj instanceof Robot r)) {
+                log.warning("Cannot change robot type");
                 return;
             }
             switch (idx) {
                 case RobotType.DUMMY:
+                    log.info("Changing robot to Dummy: " + r);
                     onChangeRobot.accept(r, new Robot(r));
                     break;
                 case RobotType.AUTO:
+                    log.info("Changing robot to Auto: " + r);
                     onChangeRobot.accept(r, new AutoRobot(r));
                     break;
                 case RobotType.CONTROL:
+                    log.info("Changing robot to Control: " + r);
                     onChangeRobot.accept(r, new ControlRobot(r));
                     break;
             }
@@ -235,7 +249,10 @@ public class ReditMenu {
         return speed = makeNumField(
             0,
             Double.MAX_VALUE,
-            (s, r) -> r.speed(s),
+            (s, r) -> {
+                log.info("Changing robot speed to '" + s + "'': " + r);
+                r.speed(s);
+            },
             Robot.class
         );
     }
@@ -244,7 +261,10 @@ public class ReditMenu {
         return angle = makeNumField(
             -360,
             360,
-            (a, r) -> r.angle(-a / 180 * Math.PI),
+            (a, r) -> {
+                log.info("Changing robot angle to '" + a + "'': " + r);
+                r.angle(-a / 180 * Math.PI);
+            },
             Robot.class
         );
     }
@@ -260,6 +280,9 @@ public class ReditMenu {
             0,
             Double.MAX_VALUE,
             (rs, r) -> {
+                log.info(
+                    "Changing robot rotation speed to '" + rs + "'': " + r
+                );
                 rs = rs / 180 * Math.PI;
                 if (r instanceof ControlRobot cr) {
                     cr.rspeed(rs);
@@ -287,7 +310,12 @@ public class ReditMenu {
         return edist = makeNumField(
             0,
             Double.MAX_VALUE,
-            (ed, r) -> r.edist(ed),
+            (ed, r) -> {
+                log.info(
+                    "Changing robot elide distance to '" + ed + "'': " + r
+                );
+                r.edist(ed);
+            },
             AutoRobot.class
         );
     }
@@ -296,7 +324,12 @@ public class ReditMenu {
         return rdist = makeNumField(
             -360,
             360,
-            (rd, r) -> r.erot(-rd / 180 * Math.PI),
+            (rd, r) -> {
+                log.info(
+                    "Changing robot elide rotation to '" + rd + "'': " + r
+                );
+                r.erot(-rd / 180 * Math.PI);
+            },
             AutoRobot.class
         );
     }
