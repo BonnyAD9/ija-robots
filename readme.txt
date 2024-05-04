@@ -17,3 +17,4 @@ How to build jar file:
 
 How to build docs:
   mvn javadoc:javadoc
+    docs are in folder target/site/apidocs
