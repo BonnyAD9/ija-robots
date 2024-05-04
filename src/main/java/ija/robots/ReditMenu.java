@@ -134,7 +134,7 @@ public class ReditMenu {
         rtype.getSelectionModel().select(getRobotType());
         speed.setText(String.format("%.2f", r.speed()));
         angle.setText(
-            String.format("%.2f", reduceDegrees(r.angle() / Math.PI * 180))
+            String.format("%.2f", reduceDegrees(-r.angle() / Math.PI * 180))
         );
 
         if (r instanceof ControlRobot cr) {

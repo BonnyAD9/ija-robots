@@ -126,11 +126,12 @@ public class Robot extends SimObj {
      * @param angle The new direction. (radians)
      */
     public void angle(double angle) {
+        var ch = this.angle != angle;
         this.angle = angle;
         var c = center().add(vecAngle().mul(RADIUS * 2 / 3.));
         eye.setCenterX(c.x());
         eye.setCenterY(c.y());
-        if (onAngleChange != null) {
+        if (ch && onAngleChange != null) {
             onAngleChange.accept(angle);
         }
     }
