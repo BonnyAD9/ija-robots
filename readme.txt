@@ -13,7 +13,7 @@ How to run:
 
 How to build jar file:
   mvn package
-    the jar file is target/ija-robots-1.0-SNAPSHOT.jar
+    the jar file is target/ija-robots-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 How to build docs:
   mvn javadoc:javadoc
