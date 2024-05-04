@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @authors Martin Slezák (xsleza26), Jakub Antonín Štigler (xstigl00)
+ * @brief Loads room configuration from file.
+ */
+
 package ija.robots.load;
 
 import java.io.File;

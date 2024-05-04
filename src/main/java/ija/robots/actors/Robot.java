@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @authors Martin Slezák (xsleza26), Jakub Antonín Štigler (xstigl00)
+ * @brief Simple robot that can go only forwards. Base class for all other
+ * robots.
+ */
+
 package ija.robots.actors;
 
 import java.util.function.Consumer;

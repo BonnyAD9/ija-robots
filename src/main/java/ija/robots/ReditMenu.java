@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @authors Jakub Antonín Štigler (xstigl00)
+ * @brief Menu for editing robot parameters.
+ */
+
 package ija.robots;
 
 import java.util.function.BiConsumer;
@@ -33,7 +39,6 @@ public class ReditMenu {
     private SimObj obj;
 
     private HBox pane;
-
 
     private HBox all;
     private HBox robot;

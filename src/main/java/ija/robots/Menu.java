@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @authors Martin Slezák (xsleza26), Jakub Antonín Štigler (xstigl00)
+ * @brief Menu for adding robots to the room.
+ */
+
 package ija.robots;
 
 import java.util.logging.Logger;

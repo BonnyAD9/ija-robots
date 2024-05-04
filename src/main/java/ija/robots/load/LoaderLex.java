@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @authors Martin Slezák (xsleza26)
+ * @brief Lexer for the room configuration.
+ */
+
 package ija.robots.load;
 
 import java.util.Scanner;

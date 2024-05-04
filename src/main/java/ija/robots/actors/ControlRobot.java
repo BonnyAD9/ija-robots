@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @authors Martin Slezák (xsleza26), Jakub Antonín Štigler (xstigl00)
+ * @brief Robot that can be controlled by the user.
+ */
+
 package ija.robots.actors;
 
 import ija.robots.common.Vec2;

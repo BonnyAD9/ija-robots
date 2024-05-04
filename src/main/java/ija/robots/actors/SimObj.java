@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @authors Jakub Antonín Štigler (xstigl00)
+ * @brief Base class for objects that can be placed into a room.
+ */
+
 package ija.robots.actors;
 
 import java.util.function.Consumer;

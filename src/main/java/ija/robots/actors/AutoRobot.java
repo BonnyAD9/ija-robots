@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @authors Martin Slezák (xsleza26), Jakub Antonín Štigler (xstigl00)
+ * @brief Robot with basic AI that can be placed into a room.
+ */
+
 package ija.robots.actors;
 
 import ija.robots.common.Vec2;

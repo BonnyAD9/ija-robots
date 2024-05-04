@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @authors Martin Slezák (xsleza26), Jakub Antonín Štigler (xstigl00)
+ * @brief Two dimensional vector/position/size/range.
+ */
+
 package ija.robots.common;
 
 /**

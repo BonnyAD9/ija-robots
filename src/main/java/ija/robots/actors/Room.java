@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @authors Martin Slezák (xsleza26), Jakub Antonín Štigler (xstigl00)
+ * @brief Room that can contain robots and obstacles and simulate their
+ * movement.
+ */
+
 package ija.robots.actors;
 
 import java.io.FileWriter;

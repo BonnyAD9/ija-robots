@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @authors Martin Slezák (xsleza26), Jakub Antonín Štigler (xstigl00)
+ * @brief The base of the aplicatoin.
+ */
+
 package ija.robots;
 
 import java.util.logging.Logger;
