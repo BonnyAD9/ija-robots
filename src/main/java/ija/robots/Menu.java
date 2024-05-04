@@ -85,13 +85,17 @@ class ObstacleButton {
     }
 
     private void mousePress(MouseEvent event) {
+        shape.setStroke(Color.web("#ffff55"));
         shape.setCursor(Cursor.CLOSED_HAND);
         lastPos = new Vec2(event.getX(), event.getY());
     }
 
     private void mouseRelease(MouseEvent event) {
+        shape.setStroke(Color.WHITE);
         log.info("Adding new obstacle.");
-        room.add(new Obstacle(new Rect(shape.getX(), shape.getY(), 60, 60)));
+        var obs = new Obstacle(new Rect(shape.getX(), shape.getY(), 60, 60));
+        room.add(obs);
+        obs.setSelected(true);
         menu.setVisible(false);
         shape.setX(pos.x());
         shape.setY(pos.y());
@@ -174,14 +178,18 @@ class RobotButton {
     }
 
     private void mousePress(MouseEvent event) {
+        shape.setStroke(Color.web("#ffff55"));
         shape.setCursor(Cursor.CLOSED_HAND);
         lastPos = new Vec2(event.getX(), event.getY());
     }
 
     private void mouseRelease(MouseEvent event) {
         log.info("Adding new robot.");
+        shape.setStroke(Color.WHITE);
         var loc = new Vec2(shape.getCenterX() - 25, shape.getCenterY() - 25);
-        room.add(new Robot(loc, 20, Math.PI / 2));
+        var rob = new Robot(loc, 20, Math.PI / 2);
+        room.add(rob);
+        rob.setSelected(true);
         menu.setVisible(false);
         shape.setCenterX(pos.x());
         shape.setCenterY(pos.y());
