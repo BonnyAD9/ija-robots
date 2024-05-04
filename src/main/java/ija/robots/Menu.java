@@ -2,8 +2,8 @@ package ija.robots;
 
 import java.util.logging.Logger;
 
+import ija.robots.actors.AutoRobot;
 import ija.robots.actors.Obstacle;
-import ija.robots.actors.Robot;
 import ija.robots.actors.Room;
 import ija.robots.common.Rect;
 import ija.robots.common.Vec2;
@@ -119,6 +119,7 @@ class RobotButton {
     Menu menu;
     Room room;
     Circle shape;
+    Circle eye;
     Vec2 pos, lastPos;
 
     private Logger log = Logger.getLogger("Menu");
@@ -140,6 +141,14 @@ class RobotButton {
         shape.setOnMouseDragged(e -> mouseDrag(e));
         shape.setOnMouseEntered(e -> shape.setCursor(Cursor.OPEN_HAND));
         shape.setOnMouseExited(e -> shape.setCursor(Cursor.DEFAULT));
+
+        createEye();
+        eyePos();
+        eye.setOnMousePressed(e -> mousePress(e));
+        eye.setOnMouseReleased(e -> mouseRelease(e));
+        eye.setOnMouseDragged(e -> mouseDrag(e));
+        eye.setOnMouseEntered(e -> eye.setCursor(Cursor.OPEN_HAND));
+        eye.setOnMouseExited(e -> eye.setCursor(Cursor.DEFAULT));
     }
 
     /**
@@ -150,6 +159,8 @@ class RobotButton {
         this.pos = new Vec2(pos.x() + 25, pos.y() + 25);
         lastPos = new Vec2(0, 0);
         createShape();
+        createEye();
+        eyePos();
     }
 
     /**
@@ -161,6 +172,14 @@ class RobotButton {
     }
 
     /**
+     * Gets menu robot eye
+     * @return eye of the robot button
+     */
+    public Circle getEye() {
+        return eye;
+    }
+
+    /**
      * Sets position of the robot button
      * @param pos new position
      */
@@ -168,13 +187,20 @@ class RobotButton {
         this.pos = new Vec2(pos.x() + 25, pos.y() + 25);
         shape.setCenterX(this.pos.x());
         shape.setCenterY(this.pos.y());
+        eyePos();
     }
 
     private void createShape() {
         shape = new Circle(this.pos.x(), this.pos.y(), 25);
-        shape.setFill(Color.web("#cc55cc"));
+        shape.setFill(Color.web("#5555cc"));
         shape.setStroke(Color.WHITE);
         shape.setStrokeWidth(6);
+    }
+
+    private void createEye() {
+        eye = new Circle(3);
+        eye.setFill(Color.WHITE);
+        eye.setStrokeWidth(0);
     }
 
     private void mousePress(MouseEvent event) {
@@ -187,7 +213,9 @@ class RobotButton {
         log.info("Adding new robot.");
         shape.setStroke(Color.WHITE);
         var loc = new Vec2(shape.getCenterX() - 25, shape.getCenterY() - 25);
-        var rob = new Robot(loc, 20, Math.PI / 2);
+        var rob = new AutoRobot(
+            loc, 20, Math.PI / 2, 20, Math.PI / Math.E, Math.PI / 4
+        );
         room.add(rob);
         rob.setSelected(true);
         menu.setVisible(false);
@@ -200,9 +228,19 @@ class RobotButton {
         var newPos = new Vec2(event.getX(), event.getY());
         var delta = newPos.sub(lastPos);
 
-        shape.setCenterX(shape.getCenterX() + delta.x());
-        shape.setCenterY(shape.getCenterY() + delta.y());
+        var cpos = new Vec2(
+            shape.getCenterX() + delta.x(),
+            shape.getCenterY() + delta.y()
+        );
+        shape.setCenterX(cpos.x());
+        shape.setCenterY(cpos.y());
+        eyePos();
         lastPos = newPos;
+    }
+
+    private void eyePos() {
+        eye.setCenterX(shape.getCenterX());
+        eye.setCenterY(shape.getCenterY() + 15);
     }
 }
 
@@ -233,7 +271,9 @@ public class Menu {
             obstGhost.getShape(),
             obstBtn.getShape(),
             robGhost.getShape(),
-            robBtn.getShape()
+            robGhost.getEye(),
+            robBtn.getShape(),
+            robBtn.getEye()
         );
         pane.setMaxHeight(rect.height());
 
