@@ -1,6 +1,6 @@
-IJA Projekt - roboti
+IJA project - robots
 
-Členové týmu:
+Team members:
   Martin Slezák (xsleza26)
   Jakub Antonín Štigler (xstigl00)
 
