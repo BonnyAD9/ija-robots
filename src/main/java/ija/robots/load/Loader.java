@@ -190,10 +190,10 @@ public class Loader {
                         case "rotation_speed":
                             r = readNum(lexer, "Rot. speed expects number");
                             break;
-                        case "elide_dist":
+                        case "elide_distance":
                             el = readNum(lexer, "Elide dist. expects number");
                             break;
-                        case "elide_rot":
+                        case "elide_rotation":
                             el_r = readNum(lexer, "Elide rot. expects number");
                             break;
                         default:

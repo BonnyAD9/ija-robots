@@ -168,7 +168,7 @@ public class AutoRobot extends Robot {
     public String toString() {
         return String.format(
             "auto_robot: [%f, %f] { speed: %f, angle: %f, rotation_speed: " +
-            "%f, elide_dist: %f, elide_rot: %f }",
+            "%f, elide_distance: %f, elide_rotation: %f }",
             hitbox().x(),
             hitbox().y(),
             sspeed,
