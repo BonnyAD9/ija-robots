@@ -13,6 +13,7 @@ import ija.robots.common.Vec2;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -277,6 +278,11 @@ public class Room {
     }
 
     private void keyListener(KeyEvent event, boolean start) {
+        if (selected != null && event.getCode() == KeyCode.DELETE) {
+            remove(selected);
+            return;
+        }
+
         if (!isRunning() || !(selected instanceof ControlRobot))
             return;
 
