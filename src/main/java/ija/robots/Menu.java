@@ -206,6 +206,7 @@ class RobotButton {
     private void mousePress(MouseEvent event) {
         shape.setStroke(Color.web("#ffff55"));
         shape.setCursor(Cursor.CLOSED_HAND);
+        eye.setCursor(Cursor.CLOSED_HAND);
         lastPos = new Vec2(event.getX(), event.getY());
     }
 
@@ -222,6 +223,8 @@ class RobotButton {
         shape.setCenterX(pos.x());
         shape.setCenterY(pos.y());
         shape.setCursor(Cursor.DEFAULT);
+        eye.setCursor(Cursor.DEFAULT);
+        eyePos();
     }
 
     private void mouseDrag(MouseEvent event) {
