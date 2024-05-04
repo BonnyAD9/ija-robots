@@ -240,6 +240,10 @@ public class Menu {
         menu = new StackPane(bg, pane, btn);
         StackPane.setAlignment(bg, Pos.CENTER_LEFT);
         StackPane.setMargin(btn, new Insets(5));
+        menu.setOnMousePressed(e -> {
+            if (e.getX() > 100)
+                setVisible(false);
+        });
         menu.setAlignment(Pos.TOP_LEFT);
         menu.setVisible(false);
     }
